@@ -34,3 +34,8 @@
 - 버전 관리
   - GitHub
  
+## API 명세
+- http://localhost:8080/swagger-ui.html
+- 위 링크는 Repository 를 다운 받으신 후 스프링 부트의 내부 톰캣을 구동시키면 접근이 가능합니다.
+
+## 개발 현황(2022.06.07 ~)

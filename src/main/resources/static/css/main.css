@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+body{
+    background-color : green;
+}
+.title {
+    text-align: center;
+    font-family: 'Jua', sans-serif;
+}
+.indexButton{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    margin-bottom: 15px;
+}
+.mainIndex{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+}
