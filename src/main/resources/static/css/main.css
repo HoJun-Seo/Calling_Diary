@@ -20,3 +20,20 @@ body{
     left: 50%;
     transform: translateX(-50%);
 }
+.termsForm{
+    background-color: aliceblue;
+}
+.txtArea{
+    width:100%;
+    height:200px;
+}
+.firsttermsText{
+    margin-left:45px;
+}
+.secondtermsText{
+    margin-left:90px;
+}
+.btnGrid{
+    position:relative;
+    left:14%
+}
