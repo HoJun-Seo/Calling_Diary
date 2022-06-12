@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../css/main.css">
     <script type="text/javascript" src="../js/memberController.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-{SDK-최신버전}.js"></script>
     <title>Calling Diary!</title>
 </head>
 <body>
@@ -45,7 +46,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="nickname" class="control-label">닉네임(*)</label>
-                                        <input type="text" class="form-control" id="nickname" placeholder="닉네임 입력"><br>
+                                        <input type="text" class="form-control" id="nickname" placeholder="닉네임 입력" onchange="checkNickname_pattern()"><br>
+                                        <p class="text-primary"> - 특수문자를 제외한 2~20자리 닉네임을 작성해주세요</p>
                                         <p id="nicknameCheck"></p>
                                     </div>
                                     <div class="form-group">

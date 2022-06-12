@@ -22,4 +22,11 @@ public class MemberServiceImpl implements MemberService {
         String pattern = "(?=.*\\d{1,50})(?=.*[~`!@#$%\\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,50}).{8,50}$";
         return Pattern.matches(pattern, pwd);
     }
+
+    @Override
+    public boolean checkNicknamePattern(String nickname) {
+
+        String pattern = "^[a-zA-Zㄱ-힣0-9]*$";
+        return Pattern.matches(pattern,nickname);
+    }
 }

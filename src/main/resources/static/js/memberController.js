@@ -4,6 +4,10 @@ $(function(){
         backdrop : false,
         keyboard : false
     });
+
+    // 본인인증 기능 구현
+    let IMP = window.IMP;
+    IMP.init("imp99072227");
 })
 // 약관 동의서 함수
 function chk() {
@@ -107,7 +111,7 @@ function checkPwd_repeat(){
     let pwd = document.getElementById("passwd").value;
     let pwdRepeat = document.getElementById("checkPasswd").value;
 
-    if(pwd === pwdRepeat){
+    if(pwd !== pwdRepeat){
         $("#pwdCheckRepeat").text(" - 비밀번호를 똑같이 입력해주세요");
         $("#pwdCheckRepeat").css("color", "red");
         pwdRepeatComplete = false;
@@ -118,6 +122,34 @@ function checkPwd_repeat(){
         pwdRepeatComplete = true;
         formCheck();
     }
+}
+
+function checkNickname_pattern(){
+    let nickname = document.getElementById("nickname").value;
+
+    fetch("/member/checkNickname_pattern", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "nickname":nickname
+        })
+    })
+    .then((response) => response.text())
+    .then((checkStatus) => {
+        if(checkStatus === "false"){
+            $("#nicknameCheck").text(" - 닉네임 형식이 잘못 되었습니다.");
+            $("#nicknameCheck").css("color", "red");
+            nicknameComplete = false;
+            formCheck();
+        }
+        else{
+            $("#nicknameCheck").text("");
+            nicknameComplete = true;
+            formCheck();
+        }
+    })
 }
 
 function formCheck(){

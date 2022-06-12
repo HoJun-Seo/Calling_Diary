@@ -37,4 +37,15 @@ public class MemberController {
         boolean checkStatus = memberService.checkPwdPattern(pwd);
         return checkStatus;
     }
+
+    @ResponseBody
+    @PostMapping("/checkNickname_pattern")
+    public boolean checkNicknamePattern(@RequestBody String httpBody){
+
+        JSONObject jsonObject = new JSONObject(httpBody);
+        String nickname = jsonObject.getString("nickname");
+
+        boolean checkStatus = memberService.checkNicknamePattern(nickname);
+        return checkStatus;
+    }
 }
