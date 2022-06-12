@@ -5,9 +5,6 @@ $(function(){
         keyboard : false
     });
 
-    // 본인인증 기능 구현
-    let IMP = window.IMP;
-    IMP.init("imp99072227");
 })
 // 약관 동의서 함수
 function chk() {
@@ -152,6 +149,75 @@ function checkNickname_pattern(){
     })
 }
 
+
+let checkNumber = "";
+// 본인인증 처리 함수
+function certificate(){
+
+    let phoneNumber = document.getElementById("phoneNumber").value;
+
+    fetch("/member/checkPhoneNumber_pattern", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "phoneNumber":phoneNumber
+        })
+    })
+    .then((response) => response.text())
+    .then((checkStatus) => {
+        if(checkStatus === "true"){
+            fetch("/member/check_phoneNumber", {
+                method:"post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "phoneNumber":phoneNumber
+                })
+            })
+            .then((response) => response.text())
+            .then((returnNumber) => {
+                $("#phonNumber_patternCheck").text("");
+                alert("문자가 발송 되었습니다. 인증번호를 입력해주세요");
+                checkNumber = returnNumber;
+            })
+        }
+        else{
+            $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
+            $("#phonNumber_patternCheck").css("color", "red");
+            phoneComplete = false;
+            formCheck();
+        }
+    })
+    
+}
+
+function checkNumberConfirm(){
+
+    let inputNumber = document.getElementById("checkNumber").value;
+
+    if(inputNumber === checkNumber){
+        $("#phoneNumberCheck").text("");
+        $("#phoneNumber").attr("readonly", true);
+        $("#checkNumber").attr("readonly", true);
+        alert("인증이 완료 되었습니다.");
+        phoneComplete = true;
+
+        formCheck();
+    }
+    else{
+        $("#phoneNumberCheck").text(" - 인증번호가 일치하지 않습니다.");
+        $("#phoneNumberCheck").after("<br>");
+        $("#phoneNumberCheck").text(" - 인증번호를 다시 요청하거나, 전화번호를 잘못 입력하지는 않았는지 확인해주세요");
+        $("#phoneNumberCheck").css("color", "red");
+        phoneComplete = false;
+        formCheck();
+    }
+
+}
+
 function formCheck(){
     // 모든 양식들 중 하나라도 규칙을 준수하고 있지 않다면 가입 버튼 비활성화
     if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
@@ -163,5 +229,4 @@ function formCheck(){
         const btnRegister = document.getElementById("btnRegister");
         btnRegister.disabled = false;
     }
-        
 }

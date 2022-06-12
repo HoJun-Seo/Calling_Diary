@@ -1,6 +1,8 @@
 package Personal_Project.Calling_Diary.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -9,6 +11,8 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
     @Id
@@ -17,4 +21,6 @@ public class Member {
     private String passwd;
     private String nickname;
     private String phoneNumber;
+
+
 }

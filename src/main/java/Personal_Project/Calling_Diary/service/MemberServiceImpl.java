@@ -1,8 +1,12 @@
 package Personal_Project.Calling_Diary.service;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
@@ -26,7 +30,39 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean checkNicknamePattern(String nickname) {
 
-        String pattern = "^[a-zA-Zㄱ-힣0-9]*$";
+        String pattern = "^[a-zA-Zㄱ-힣0-9]+$";
         return Pattern.matches(pattern,nickname);
+    }
+
+    @Override
+    public String checkPhoneNumber(String phoneNumber) throws CoolsmsException {
+
+        String apiKey = "NCSNFWSD3AINHHIM";
+        String apiSecretKey = "5NN4H1KIMCH5I3KDRXSHI0R8J2DYAR9H";
+        Message coolsms = new Message(apiKey, apiSecretKey);
+
+        Random random = new Random();
+        String numString = "";
+        for (int i = 0; i < 4; i++){
+            String randomNumber = Integer.toString(random.nextInt(10));
+            numString += randomNumber;
+        }
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", phoneNumber);
+        params.put("from", "01050623007");
+        params.put("type", "sms");
+        params.put("text", "Calling_Diary 휴대폰 인증번호는 [" + numString + "] 입니다.");
+        coolsms.send(params);
+
+        return numString;
+    }
+
+    @Override
+    public boolean checkPhoneNumberPattern(String phoneNumber) {
+        
+        // 숫자만 허용
+        String pattern = "^[0-9]+$";
+        return Pattern.matches(pattern, phoneNumber);
     }
 }
