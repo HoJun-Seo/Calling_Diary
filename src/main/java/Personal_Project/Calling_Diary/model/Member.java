@@ -1,10 +1,8 @@
 package Personal_Project.Calling_Diary.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,11 +14,20 @@ import javax.persistence.Id;
 public class Member {
 
     @Id
+    @Column(name = "userid")
     private String userid;
 
+    @Column(name = "passwd")
     private String passwd;
+
+    @Column(name = "nickname")
     private String nickname;
-    private String phoneNumber;
 
+    @Column(name = "phonenumber")
+    private String phonenumber;
 
+    @Override
+    public String toString() {
+        return "Member : { userid : " + this.userid + ", passwd : " + this.passwd + ", nickname : " + this.nickname + ", phoneNumber : " + this.phonenumber + " }";
+    }
 }

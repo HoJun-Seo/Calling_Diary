@@ -1,16 +1,19 @@
 package Personal_Project.Calling_Diary.controller;
 
-import Personal_Project.Calling_Diary.interfaceGroup.MemberDAO;
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
 import Personal_Project.Calling_Diary.model.Member;
+import Personal_Project.Calling_Diary.repository.MemberRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.JSONObject;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MemberDAO memberDAO;
+    private final MemberRepository memberRepository;
 
     @ResponseBody
     @PostMapping("/checkId_pattern")
@@ -76,8 +79,24 @@ public class MemberController {
     }
 
     @PostMapping("/register")
+    @Transactional
     public String memberRegister(Member member){
 
-        return null;
+        // XSS 스크립트 입력 방지 실행
+        member = memberService.cleanXssRegister(member);
+        memberRepository.save(member);
+
+        return "member/registerComplete";
+    }
+
+    @ResponseBody
+    @GetMapping("/findById_overlap")
+    @Transactional
+    public String findByIdOverlap(@RequestParam String userid){
+
+        Optional<Member> findMember = memberRepository.findById(userid);
+        Member member = findMember.orElse(new Member());
+        String result = member.getUserid();
+        return result;
     }
 }

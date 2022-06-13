@@ -1,6 +1,8 @@
 package Personal_Project.Calling_Diary.service;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
+import Personal_Project.Calling_Diary.model.Member;
+import Personal_Project.Calling_Diary.xss.XssUtil;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.stereotype.Service;
@@ -30,17 +32,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean checkNicknamePattern(String nickname) {
 
-        String pattern = "^[a-zA-Zㄱ-힣0-9]+$";
+        String pattern = "^[a-zA-Zㄱ-힣0-9]{2,20}$";
         return Pattern.matches(pattern,nickname);
     }
 
     @Override
     public String checkPhoneNumber(String phoneNumber) throws CoolsmsException {
 
-        String apiKey = "NCSNFWSD3AINHHIM";
-        String apiSecretKey = "5NN4H1KIMCH5I3KDRXSHI0R8J2DYAR9H";
-        Message coolsms = new Message(apiKey, apiSecretKey);
-
+        // 원활한 개발을 위해 프로젝트 완성 때까지 휴대폰 문자인증 기능 주석 처리
+//        String apiKey = "NCSNFWSD3AINHHIM";
+//        String apiSecretKey = "5NN4H1KIMCH5I3KDRXSHI0R8J2DYAR9H";
+//        Message coolsms = new Message(apiKey, apiSecretKey);
+        
         Random random = new Random();
         String numString = "";
         for (int i = 0; i < 4; i++){
@@ -48,12 +51,12 @@ public class MemberServiceImpl implements MemberService {
             numString += randomNumber;
         }
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("to", phoneNumber);
-        params.put("from", "01050623007");
-        params.put("type", "sms");
-        params.put("text", "Calling_Diary 휴대폰 인증번호는 [" + numString + "] 입니다.");
-        coolsms.send(params);
+//        HashMap<String, String> params = new HashMap<String, String>();
+//        params.put("to", phoneNumber);
+//        params.put("from", "01050623007");
+//        params.put("type", "sms");
+//        params.put("text", "Calling_Diary 휴대폰 인증번호는 [" + numString + "] 입니다.");
+//        coolsms.send(params);
 
         return numString;
     }
@@ -64,5 +67,16 @@ public class MemberServiceImpl implements MemberService {
         // 숫자만 허용
         String pattern = "^[0-9]+$";
         return Pattern.matches(pattern, phoneNumber);
+    }
+
+    @Override
+    public Member cleanXssRegister(Member member) {
+
+        member.setUserid(XssUtil.cleanXSS(member.getUserid()));
+        member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
+        member.setNickname(XssUtil.cleanXSS(member.getNickname()));
+        member.setPhonenumber(XssUtil.cleanXSS(member.getPhonenumber()));
+
+        return member;
     }
 }

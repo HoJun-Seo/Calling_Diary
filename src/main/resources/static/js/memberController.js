@@ -65,7 +65,22 @@ function checkId_pattern(){
 
 function checkId_overlap(userId){
     // DB 접근을 통해 아이디 중복 여부 확인
-    formCheck();
+    fetch("/member/findById_overlap?userid="+userId)
+    .then((response) => response.text())
+    .then((data) => {
+        if(data === ""){
+            $("#idCheck").text("");
+            idComplete = true;
+        }
+        else{
+            $("#idCheck").text(" - 이미 존재하는 아이디 입니다.");
+            $("#idCheck").css("color", "red");
+            idComplete = false;
+            
+        }
+
+        formCheck();
+    })
 }
 
 // 비밀번호 입력값 규칙준수 여부 확인
@@ -182,6 +197,9 @@ function certificate(){
                 $("#phonNumber_patternCheck").text("");
                 alert("문자가 발송 되었습니다. 인증번호를 입력해주세요");
                 checkNumber = returnNumber;
+
+                // 프로젝트 완성 때까지 인증번호 자동 입력, 프로젝트 완성 이후 삭제할 것
+                $("#checkNumber").attr("value", checkNumber);
             })
         }
         else{
