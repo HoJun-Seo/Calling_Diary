@@ -1,6 +1,7 @@
 package Personal_Project.Calling_Diary.controller;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
+import Personal_Project.Calling_Diary.model.LoginForm;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
 import lombok.Getter;
@@ -10,9 +11,13 @@ import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -22,6 +27,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+
+    private HttpSession session;
 
     @ResponseBody
     @PostMapping("/checkId_pattern")
@@ -87,6 +94,37 @@ public class MemberController {
         memberRepository.save(member);
 
         return "member/registerComplete";
+    }
+
+    @PostMapping("/login")
+    @Transactional
+    public String login(LoginForm loginForm, HttpServletRequest request, Model model){
+        
+        // 계정이 존재하지는지 확인하고 조건에 따라 다르게 처리
+        Optional<Member> findMember = memberRepository.findById(loginForm.getUserid());
+        Member member = null;
+        
+        try{
+
+            member = findMember.orElseThrow(() -> new NoSuchElementException());
+
+            if (loginForm.getPasswd().equals(member.getPasswd())){
+                // 로그인 성공, 세션 생성 후 메인 페이지로 이동
+                session = request.getSession();
+                session.setAttribute("member", member);
+                return "redirect:/";
+            }
+            else{
+                // 로그인 실패, 비밀번호가 맞지 않음
+                model.addAttribute("loginFail", "passwdNotCorrect");
+                return "member/loginFail";
+            }
+        }
+        catch (NoSuchElementException ne){
+            model.addAttribute("loginFail", "notExistAccount");
+            System.out.println("존재하지 않는 계정입니다.");
+            return "member/loginFail";
+        }
     }
 
     @ResponseBody

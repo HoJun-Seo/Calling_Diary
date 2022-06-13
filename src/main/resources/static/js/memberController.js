@@ -6,7 +6,9 @@ $(function(){
     });
 
 })
-// 약관 동의서 함수
+
+
+/* 회원가입 관련 함수 */
 function chk() {
     let req1 = $("#req1").is(":checked");
     let req2 = $("#req2").is(":checked");
@@ -78,7 +80,6 @@ function checkId_overlap(userId){
             idComplete = false;
             
         }
-
         formCheck();
     })
 }
@@ -247,4 +248,23 @@ function formCheck(){
         const btnRegister = document.getElementById("btnRegister");
         btnRegister.disabled = false;
     }
+}
+
+
+/* 로그인 함수 */
+function login(){
+
+    let userid = $("#userId").val();
+    let passwd = $("#passwd").val();
+    if(userid === ""){
+        alert("아이디를 입력해주세요");
+    }
+    else if(passwd === ""){
+        alert("비밀번호를 입력해주세요");
+    }
+    else{
+        // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
+        $("#loginForm").submit();
+    }
+    
 }
