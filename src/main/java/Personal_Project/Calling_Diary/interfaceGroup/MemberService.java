@@ -19,4 +19,5 @@ public interface MemberService {
 
     public Member cleanXssRegister(Member member);
 
+    public Member cleanXssLogin(Member member);
 }

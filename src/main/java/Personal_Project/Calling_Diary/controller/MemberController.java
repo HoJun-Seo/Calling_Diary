@@ -1,6 +1,8 @@
 package Personal_Project.Calling_Diary.controller;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
+import Personal_Project.Calling_Diary.model.FindIdForm;
+import Personal_Project.Calling_Diary.model.FindPwdForm;
 import Personal_Project.Calling_Diary.model.LoginForm;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
@@ -99,10 +101,15 @@ public class MemberController {
     @PostMapping("/login")
     @Transactional
     public String login(LoginForm loginForm, HttpServletRequest request, Model model){
-        
+
+
+        Member member = new Member();
+        member.setUserid(loginForm.getUserid());
+        member.setPasswd(loginForm.getPasswd());
+        // 입력 데이터를 받을 경우 반드시 XSS 방지 메소드를 거칠 것!
+        member = memberService.cleanXssLogin(member);
         // 계정이 존재하지는지 확인하고 조건에 따라 다르게 처리
         Optional<Member> findMember = memberRepository.findById(loginForm.getUserid());
-        Member member = null;
         
         try{
 
@@ -122,7 +129,6 @@ public class MemberController {
         }
         catch (NoSuchElementException ne){
             model.addAttribute("loginFail", "notExistAccount");
-            System.out.println("존재하지 않는 계정입니다.");
             return "member/loginFail";
         }
     }
@@ -136,5 +142,43 @@ public class MemberController {
         Member member = findMember.orElse(new Member());
         String result = member.getUserid();
         return result;
+    }
+
+    @PostMapping("/findId")
+    @Transactional
+    public String findId(FindIdForm findIdForm, Model model){
+
+        String pNumber = findIdForm.getPhonenumber();
+        Member member = memberRepository.findByPNumber(pNumber);
+        
+        // 해당하는 전화번호를 가지고 있는 회원이 존재하지 않을 경우
+        if (member == null){
+            model.addAttribute("finafailAccount", "userid");
+            return "member/findAccountFail";
+        }
+        // 전화번호를 이용해 회원 검색에 성공했을 경우
+        else{
+            model.addAttribute("userid", member.getUserid());
+            return "member/findIdSucessPage";
+        }
+    }
+
+    @PostMapping("/findPwd")
+    @Transactional
+    public String findPwd(FindPwdForm findPwdForm, Model model){
+
+        String nickname = findPwdForm.getNickname();
+        String pNumber = findPwdForm.getPhonenumber();
+        Member member = memberRepository.findBy_NickName_pNumber(nickname,pNumber);
+        if (member == null){
+            model.addAttribute("finafailAccount", "passwd");
+            return "member/findAccountail";
+        }
+        else{
+            // 비밀번호 찾기에 성공했을 경우 새로운 비밀번호를 설정해주는 창으로 이동
+            // 최종적으로 새로운 비밀번호 입력 완료 후 확인 버튼까지 눌러야만 기존 비밀번호 초기화 및 새로운 비밀번호로 업데이트
+            model.addAttribute("member", member);
+            return "member/newPasswdSet";
+        }
     }
 }

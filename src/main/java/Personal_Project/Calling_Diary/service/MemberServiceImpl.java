@@ -80,4 +80,12 @@ public class MemberServiceImpl implements MemberService {
 
         return member;
     }
+
+    @Override
+    public Member cleanXssLogin(Member member) {
+
+        member.setUserid(XssUtil.cleanXSS(member.getUserid()));
+        member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
+        return member;
+    }
 }

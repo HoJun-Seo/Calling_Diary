@@ -22,4 +22,15 @@ public class PageController {
     public String moveRegisterForm(){
         return "member/registerForm";
     }
+
+    @GetMapping("/findIdForm")
+    public String moveFindIdForm(){
+        return "member/findIdForm";
+    }
+
+    @GetMapping("/findPwdForm")
+    public String moveFindPwdForm(){
+        return "member/findPwdForm";
+    }
+
 }

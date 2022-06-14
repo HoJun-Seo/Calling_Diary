@@ -241,15 +241,38 @@ function formCheck(){
     // 모든 양식들 중 하나라도 규칙을 준수하고 있지 않다면 가입 버튼 비활성화
     if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
         const btnRegister = document.getElementById("btnRegister");
-        btnRegister.disabled = true;
+        if(btnRegister !== null){
+            btnRegister.disabled = true;
+        }
+        // 아이디 찾기에서 요청이 들어온 경우(아이디, 비밀번호, 닉네임측 요청이 존재하지 않기 때문에 이 셋은 반드시 fasle 이므로 해당 영역에 코드를 작성한다.)
+        if(document.getElementById("btnfindId") !== null){
+            // 전화번호 형식이 잘못 되었거나 입력한 인증번호가 일치하지 않는 경우
+            const btnfindId = document.getElementById("btnfindId")
+            if(!phoneComplete){
+                btnfindId.disabled = true;
+            }
+            else{
+                btnfindId.disabled = false;
+            }
+        }
+        // 비밀번호 찾기에서 요청이 들어온 경우
+        if(document.getElementedById("btnfindPwd") !== null){
+            const btnfindPwd = document.getElementedById("btnfindPwd")
+            if(!idComplete || !phoneComplete){
+                btnfindPwd.disabled = true;
+            }
+            else{
+                btnfindPwd.disabled = false;
+            }
+        }
     }
-        
     else{
         const btnRegister = document.getElementById("btnRegister");
-        btnRegister.disabled = false;
+        if(btnRegister != null){
+            btnRegister.disabled = false;
+        }
     }
 }
-
 
 /* 로그인 함수 */
 function login(){
@@ -266,5 +289,4 @@ function login(){
         // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
         $("#loginForm").submit();
     }
-    
 }

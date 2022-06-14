@@ -72,10 +72,17 @@ body{
 .form-control-userid:focus, .form-control-passwd:focus{
     border-bottom: 3px solid blue;
 }
-#btnLogin{
+#btnLogin, #btnfindId, #btnfindPwd{
     width:100%
 }
+
 .findAccount{
     float: right;
     font-size: 16px;
+}
+
+.modal-footer-findAccountPage {
+  padding: 15px;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
 }
