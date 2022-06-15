@@ -34,7 +34,7 @@ let nicknameComplete = false;
 let phoneComplete = false;
 
 // 아이디 입력 값 규칙준수 여부 확인
-function checkId_pattern(){
+function checkId_pattern(target){
 
     let userid = document.getElementById("userId").value;
     
@@ -60,24 +60,42 @@ function checkId_pattern(){
             idComplete = true;
 
             // 아이디 중복 여부 확인
-            checkId_overlap(userid);
+            checkId_overlap(userid, target);
         }
      });
 }
 
-function checkId_overlap(userId){
+function checkId_overlap(userId, target){
     // DB 접근을 통해 아이디 중복 여부 확인
     fetch("/member/findById_overlap?userid="+userId)
     .then((response) => response.text())
     .then((data) => {
-        if(data === ""){
-            $("#idCheck").text("");
-            idComplete = true;
+        if(data === "possbleId"){
+            // 비밀번호 찾기에서 요청이 온 경우
+            if(target === "findPwd"){
+                $("#idCheck").text("- 존재하지 않는 아이디 입니다.");
+                $("#idCheck").css("color", "red");
+                idComplete = false;
+            }
+            // 회원가입에서 요청이 온 경우
+            else if(target === "register"){
+                $("#idCheck").text("");
+                idComplete = true;
+            }
+            
         }
-        else{
-            $("#idCheck").text(" - 이미 존재하는 아이디 입니다.");
-            $("#idCheck").css("color", "red");
-            idComplete = false;
+        else if(data === "impossbleId"){
+            // 비밀번호 찾기에서 요청이 온 경우
+            if(target === "findPwd"){
+                $("#idCheck").text("");
+                idComplete = true;
+            }
+            // 회원가입에서 요청이 온 경우
+            else if(target === "register"){
+                $("#idCheck").text(" - 이미 존재하는 아이디 입니다.");
+                $("#idCheck").css("color", "red");
+                idComplete = false;
+            }
             
         }
         formCheck();
@@ -168,9 +186,12 @@ function checkNickname_pattern(){
 
 let checkNumber = "";
 // 본인인증 처리 함수
-function certificate(){
+
+// 입력 전화번호 패턴 검증 함수
+function checkPhoneNumber_pattern(){
 
     let phoneNumber = document.getElementById("phoneNumber").value;
+    const btnCertificate = document.getElementById("btnCertificate");
 
     fetch("/member/checkPhoneNumber_pattern", {
         method:"post",
@@ -183,34 +204,42 @@ function certificate(){
     })
     .then((response) => response.text())
     .then((checkStatus) => {
-        if(checkStatus === "true"){
-            fetch("/member/check_phoneNumber", {
-                method:"post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    "phoneNumber":phoneNumber
-                })
-            })
-            .then((response) => response.text())
-            .then((returnNumber) => {
+            if(checkStatus == true){
                 $("#phonNumber_patternCheck").text("");
-                alert("문자가 발송 되었습니다. 인증번호를 입력해주세요");
-                checkNumber = returnNumber;
-
-                // 프로젝트 완성 때까지 인증번호 자동 입력, 프로젝트 완성 이후 삭제할 것
-                $("#checkNumber").attr("value", checkNumber);
-            })
-        }
-        else{
-            $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
-            $("#phonNumber_patternCheck").css("color", "red");
-            phoneComplete = false;
-            formCheck();
-        }
+                btnCertificate.disabled = false;
+            }
+            else{
+                $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
+                $("#phonNumber_patternCheck").css("color", "red");
+                phoneComplete = false;
+                btnCertificate.disabled = true;
+                formCheck();
+            }
+            
     })
-    
+}
+function certificate(){
+
+    let phoneNumber = document.getElementById("phoneNumber").value;
+
+    fetch("/member/check_phoneNumber", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "phoneNumber":phoneNumber
+        })
+    })
+    .then((response) => response.text())
+    .then((returnNumber) => {
+        $("#phonNumber_patternCheck").text("");
+        alert("문자가 발송 되었습니다. 인증번호를 입력해주세요");
+        checkNumber = returnNumber;
+
+        // 프로젝트 완성 때까지 인증번호 자동 입력, 프로젝트 완성 이후 삭제할 것
+        $("#checkNumber").attr("value", checkNumber);
+    })
 }
 
 function checkNumberConfirm(){

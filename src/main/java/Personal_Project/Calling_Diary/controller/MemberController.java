@@ -6,12 +6,9 @@ import Personal_Project.Calling_Diary.model.FindPwdForm;
 import Personal_Project.Calling_Diary.model.LoginForm;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.JSONObject;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -139,27 +136,34 @@ public class MemberController {
     public String findByIdOverlap(@RequestParam String userid){
 
         Optional<Member> findMember = memberRepository.findById(userid);
-        Member member = findMember.orElse(new Member());
-        String result = member.getUserid();
-        return result;
+        try{
+            // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
+            Member member = findMember.orElseThrow(() -> new NoSuchElementException());
+            return "impossbleId";
+        }
+        catch (NoSuchElementException ne){
+            return "possbleId";
+        }
     }
+
+    // 전화번호 중복 체크 메소드 구현 필요(회원가입시, 아이디, 비밀번호 찾기 시)
 
     @PostMapping("/findId")
     @Transactional
     public String findId(FindIdForm findIdForm, Model model){
 
         String pNumber = findIdForm.getPhonenumber();
-        Member member = memberRepository.findByPNumber(pNumber);
-        
-        // 해당하는 전화번호를 가지고 있는 회원이 존재하지 않을 경우
-        if (member == null){
-            model.addAttribute("finafailAccount", "userid");
-            return "member/findAccountFail";
-        }
-        // 전화번호를 이용해 회원 검색에 성공했을 경우
-        else{
+        Optional<Member> findmember = memberRepository.findByPNumber(pNumber);
+
+        try{
+            Member member = findmember.orElseThrow(() -> new NoSuchElementException());
             model.addAttribute("userid", member.getUserid());
             return "member/findIdSucessPage";
+        }
+        catch (NoSuchElementException ne){
+            // 해당하는 전화번호를 가지고 있는 회원이 존재하지 않을 경우
+            model.addAttribute("finafailAccount", "userid");
+            return "member/findAccountFail";
         }
     }
 
@@ -169,16 +173,20 @@ public class MemberController {
 
         String nickname = findPwdForm.getNickname();
         String pNumber = findPwdForm.getPhonenumber();
-        Member member = memberRepository.findBy_NickName_pNumber(nickname,pNumber);
-        if (member == null){
-            model.addAttribute("finafailAccount", "passwd");
-            return "member/findAccountail";
-        }
-        else{
+        Optional<Member> findmember = memberRepository.findBy_NickName_pNumber(nickname,pNumber);
+
+        try {
+            Member member = findmember.orElseThrow(() -> new NoSuchElementException());
+
             // 비밀번호 찾기에 성공했을 경우 새로운 비밀번호를 설정해주는 창으로 이동
             // 최종적으로 새로운 비밀번호 입력 완료 후 확인 버튼까지 눌러야만 기존 비밀번호 초기화 및 새로운 비밀번호로 업데이트
-            model.addAttribute("member", member);
+            model.addAttribute("member", member); // 새로운 비밀번호로 변경시 어떤 회원의 비밀번호가 변경되는지 확인해야 하므로 회원 객체 데이터 자체를 전달 
             return "member/newPasswdSet";
+        }
+        catch (NoSuchElementException ne){
+            // 입력한 정보에 해당하는 회원이 존재하지 않는 경우
+            model.addAttribute("finafailAccount", "passwd");
+            return "member/findAccountFail";
         }
     }
 }
