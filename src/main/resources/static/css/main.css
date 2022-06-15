@@ -37,7 +37,7 @@ body{
     position:relative;
     left:14%
 }
-.form-control-phoneNumber {
+.form-control-phoneNumber, .form-control-registerId {
     display: inline;
     width: 80%;
     height: 34px;

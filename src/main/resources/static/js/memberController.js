@@ -34,10 +34,11 @@ let nicknameComplete = false;
 let phoneComplete = false;
 
 // 아이디 입력 값 규칙준수 여부 확인
-function checkId_pattern(target){
+function checkId_pattern(){
 
     let userid = document.getElementById("userId").value;
-    
+    const btnIdOverlap = document.getElementById("btnIdOverlap");
+
     fetch("/member/checkId_pattern", {
          method:"post",
          headers: {
@@ -53,50 +54,47 @@ function checkId_pattern(target){
             $("#idCheck").text(" - 아이디 형식이 잘못 되었습니다.");
             $("#idCheck").css("color","red");
             idComplete = false;
+
+            // 회원가입에서 요청이 넘어온 경우
+            if(btnIdOverlap !== null){
+                btnIdOverlap.disabled = true;
+            }
             formCheck();
         }
         else{
+            // 회원가입 에서 요청이 넘어온 경우
+            if(btnIdOverlap !== null){
+                btnIdOverlap.disabled = false;
+            }
             $("#idCheck").text("");
             idComplete = true;
-
-            // 아이디 중복 여부 확인
-            checkId_overlap(userid, target);
         }
      });
 }
 
-function checkId_overlap(userId, target){
+function checkId_overlap(){
     // DB 접근을 통해 아이디 중복 여부 확인
-    fetch("/member/findById_overlap?userid="+userId)
+    let userid = document.getElementById("userId").value;
+
+    fetch("/member/checkId_overlap", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+           "userid":userid
+        })
+    })
     .then((response) => response.text())
     .then((data) => {
         if(data === "possbleId"){
-            // 비밀번호 찾기에서 요청이 온 경우
-            if(target === "findPwd"){
-                $("#idCheck").text("- 존재하지 않는 아이디 입니다.");
-                $("#idCheck").css("color", "red");
-                idComplete = false;
-            }
-            // 회원가입에서 요청이 온 경우
-            else if(target === "register"){
-                $("#idCheck").text("");
-                idComplete = true;
-            }
-            
+            $("#idCheck").text("");
+            idComplete = true;    
         }
         else if(data === "impossbleId"){
-            // 비밀번호 찾기에서 요청이 온 경우
-            if(target === "findPwd"){
-                $("#idCheck").text("");
-                idComplete = true;
-            }
-            // 회원가입에서 요청이 온 경우
-            else if(target === "register"){
-                $("#idCheck").text(" - 이미 존재하는 아이디 입니다.");
-                $("#idCheck").css("color", "red");
-                idComplete = false;
-            }
-            
+            $("#idCheck").text(" - 이미 존재하는 아이디 입니다.");
+            $("#idCheck").css("color", "red");
+            idComplete = false;
         }
         formCheck();
     })
@@ -204,19 +202,47 @@ function checkPhoneNumber_pattern(){
     })
     .then((response) => response.text())
     .then((checkStatus) => {
-            if(checkStatus == true){
-                $("#phonNumber_patternCheck").text("");
-                btnCertificate.disabled = false;
-            }
-            else{
-                $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
-                $("#phonNumber_patternCheck").css("color", "red");
-                phoneComplete = false;
-                btnCertificate.disabled = true;
-                formCheck();
-            }
-            
+        if(checkStatus === "true"){
+            checkPhoneNumber_overlap(phoneNumber);
+        }
+        else{
+            $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
+            $("#phonNumber_patternCheck").css("color", "red");
+            phoneComplete = false;
+            btnCertificate.disabled = true;
+            formCheck();
+        }
     })
+}
+
+async function checkPhoneNumber_overlap(phoneNumber){
+
+    await fetch("/member/checkPhoneNumber_overlap", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "phoneNumber":phoneNumber
+        })
+    })
+    .then((response) => response.text())
+    .then((checkStatus) => {
+
+        if(checkStatus === "false"){
+            $("#phonNumber_patternCheck").text("");
+            btnCertificate.disabled = false;
+        }
+        else{
+            $("#phonNumber_patternCheck").text(" - 이미 등록되어 있는 전화번호 입니다.");
+            $("#phonNumber_patternCheck").css("color", "red");
+            phoneComplete = false;
+            btnCertificate.disabled = true;
+            formCheck();
+        }
+    })
+
+    
 }
 function certificate(){
 
@@ -270,13 +296,16 @@ function formCheck(){
     // 모든 양식들 중 하나라도 규칙을 준수하고 있지 않다면 가입 버튼 비활성화
     if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
         const btnRegister = document.getElementById("btnRegister");
+        const btnfindId = document.getElementById("btnfindId");
+        const btnfindPwd = document.getElementById("btnfindPwd");
+
         if(btnRegister !== null){
             btnRegister.disabled = true;
         }
         // 아이디 찾기에서 요청이 들어온 경우(아이디, 비밀번호, 닉네임측 요청이 존재하지 않기 때문에 이 셋은 반드시 fasle 이므로 해당 영역에 코드를 작성한다.)
-        if(document.getElementById("btnfindId") !== null){
+        if(btnfindId !== null){
             // 전화번호 형식이 잘못 되었거나 입력한 인증번호가 일치하지 않는 경우
-            const btnfindId = document.getElementById("btnfindId")
+            
             if(!phoneComplete){
                 btnfindId.disabled = true;
             }
@@ -285,8 +314,7 @@ function formCheck(){
             }
         }
         // 비밀번호 찾기에서 요청이 들어온 경우
-        if(document.getElementedById("btnfindPwd") !== null){
-            const btnfindPwd = document.getElementedById("btnfindPwd")
+        if(btnfindPwd !== null){
             if(!idComplete || !phoneComplete){
                 btnfindPwd.disabled = true;
             }

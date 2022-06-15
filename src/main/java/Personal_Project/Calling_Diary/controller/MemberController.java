@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,6 +42,22 @@ public class MemberController {
     }
 
     @ResponseBody
+    @GetMapping("/checkId_overlap")
+    @Transactional
+    public String checkIdOverlap(@RequestBody String userid){
+
+        Optional<Member> findMember = memberRepository.findById(userid);
+        try{
+            // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
+            Member member = findMember.orElseThrow(() -> new NoSuchElementException());
+            return "impossbleId";
+        }
+        catch (NoSuchElementException ne){
+            return "possbleId";
+        }
+    }
+
+    @ResponseBody
     @PostMapping("/checkPwd_pattern")
     public boolean checkPwdPattern(@RequestBody String httpBody){
 
@@ -64,7 +81,7 @@ public class MemberController {
 
     @ResponseBody
     @PostMapping("/checkPhoneNumber_pattern")
-    public boolean checkPhoneNumberPattern(@RequestBody String httpBody){
+    public boolean checkPhoneNumberPattern(@RequestBody String httpBody, RedirectAttributes redirectAttributes){
 
         JSONObject jsonObject = new JSONObject(httpBody);
         String phoneNumber = jsonObject.getString("phoneNumber");
@@ -72,6 +89,33 @@ public class MemberController {
         boolean checkStatus = memberService.checkPhoneNumberPattern(phoneNumber);
         return checkStatus;
     }
+
+    @ResponseBody
+    @PostMapping("/checkPhoneNumber_overlap")
+    @Transactional
+    public String checkPhoneNumberOverlap(@RequestBody String httpBody){
+
+        JSONObject jsonObject = new JSONObject(httpBody);
+        String phoneNumber = jsonObject.getString("phoneNumber");
+        String overlap = "";
+        Optional<Member> byPNumber = memberRepository.findByPNumber(phoneNumber);
+        System.out.println("전화번호 중복확인 api 실행");
+        
+        try{
+            Member member = byPNumber.orElseThrow(() -> new NoSuchElementException());
+            if (member.getPhonenumber().equals(phoneNumber)){
+                // 전화번호가 중복된다는 뜻의 true
+                overlap = "true";
+            }
+        }
+        catch (NoSuchElementException ne){
+            // 전화번호가 중복되지 않는다는 뜻의 false
+            overlap = "false";
+        }
+
+        return overlap;
+    }
+
 
     @ResponseBody
     @PostMapping("/check_phoneNumber")
@@ -130,23 +174,9 @@ public class MemberController {
         }
     }
 
-    @ResponseBody
-    @GetMapping("/findById_overlap")
-    @Transactional
-    public String findByIdOverlap(@RequestParam String userid){
 
-        Optional<Member> findMember = memberRepository.findById(userid);
-        try{
-            // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
-            Member member = findMember.orElseThrow(() -> new NoSuchElementException());
-            return "impossbleId";
-        }
-        catch (NoSuchElementException ne){
-            return "possbleId";
-        }
-    }
 
-    // 전화번호 중복 체크 메소드 구현 필요(회원가입시, 아이디, 비밀번호 찾기 시)
+    // 전화번호 중복 체크 메소드 구현 필요(회원가입시)
 
     @PostMapping("/findId")
     @Transactional
