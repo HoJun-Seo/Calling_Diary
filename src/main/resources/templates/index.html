@@ -44,7 +44,10 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn-lg btn-warning indexButton" onclick="logout()">로그아웃</button>
+                        <form action="/member/logout" method="post">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button class="btn btn-lg btn-warning indexButton" type="submit">로그아웃</button>
+                        </form>
                     </div>
                 </div>
             </div>
