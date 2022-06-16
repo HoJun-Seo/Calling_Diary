@@ -379,16 +379,3 @@ function login(){
         $("#loginForm").submit();
     }
 }
-
-/* 로그아웃 함수 */
-function logout(){
-
-    fetch('/member/logout', {
-        method:"delete"
-    })
-    .then((response) => {
-        if(response.redirected){
-            location.href=response.url;
-        }
-    })
-}
