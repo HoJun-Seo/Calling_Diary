@@ -12,4 +12,25 @@ public class PageController {
     public String moveLogin(){
         return "member/login";
     }
+
+    @GetMapping("/registerTerm")
+    public String openRegisterTerm(){
+        return "member/registerTerm";
+    }
+
+    @GetMapping("/registerForm")
+    public String moveRegisterForm(){
+        return "member/registerForm";
+    }
+
+    @GetMapping("/findIdForm")
+    public String moveFindIdForm(){
+        return "member/findIdForm";
+    }
+
+    @GetMapping("/findPwdForm")
+    public String moveFindPwdForm(){
+        return "member/findPwdForm";
+    }
+
 }

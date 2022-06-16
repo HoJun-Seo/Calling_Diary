@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/pageController.js"></script>
+    <script type="text/javascript" src="../js/memberController.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="modal" id="myModal" style="margin-top : 210px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="title text-default" id="myModalLabel">Calling Diary!</h3>
+                    <h2 class="title text-default">새 비밀번호 설정</h2>
+                  </div>
+                  <div class="modal-body">
+                    <form action="/member/newPwdSet" method="post">
+                      <div class="form-group">
+                        <label for="passwd" class="control-label">새 비밀번호</label>
+                        <input type="password" class="form-control" id="passwd" name="passwd" placeholder="새 비밀번호 입력" onchange="checkPwd_pattern()"><br>
+                        <p class="text-primary"> - 숫자,특문 각 1회 이상, 영문은 2개 이상을 사용해주세요</p>
+                        <p class="text-primary"> - 8자리 이상 입력해주세요</p>
+                        <p id="pwdCheck"></p>
+                      </div>
+                      <div class="form-group">
+                        <label for="checkPasswd" class="control-label">새 비밀번호 확인</label>
+                        <input type="password" class="form-control" id="checkPasswd" placeholder="새 비밀번호 확인" onchange="checkPwd_repeat()" disabled><br>
+                        <p class="text-primary"> - 새 비밀번호를 한번 더 입력해주세요</p>
+                        <p id="pwdCheckRepeat"></p>
+                      </div>
+                      <div class="form-group">
+                        <input type="hidden" th:value="${member.userid}" name="userid">
+                        <input type="hidden" th:value="${member.nickname}" name="nickname">
+                        <input type="hidden" th:value="${member.phonenumber}" name="phonenumber">
+                      </div>
+                      <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" id="btnnewPwd" value="비밀번호 변경" disabled>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+</html>

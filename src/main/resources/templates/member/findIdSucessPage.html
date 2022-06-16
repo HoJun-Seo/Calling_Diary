@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/pageController.js"></script>
+    <script type="text/javascript" src="../js/memberController.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="modal" id="myModal" style="margin-top : 210px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="title text-default" id="myModalLabel">Calling Diary!</h3>
+                            <h2 class="title text-default">아이디 찾기</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="well well-lg">
+                                <p>아이디 찾기 결과 : <strong th:text="${userid}"></strong></p>
+                            </div>
+                        </div>
+                        <div class="modal-footer-findAccountPage">
+                            <a href="javascript:moveLogin()" type="button" class="btn btn-primary" style="width:47%">로그인 하러가기</a>&nbsp;
+                            <a href="/move/findPwdForm" type="button" class="btn btn-primary" style="width:47%">비밀번호 찾기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

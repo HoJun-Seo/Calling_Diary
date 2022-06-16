@@ -20,3 +20,69 @@ body{
     left: 50%;
     transform: translateX(-50%);
 }
+.termsForm{
+    background-color: aliceblue;
+}
+.txtArea{
+    width:100%;
+    height:200px;
+}
+.firsttermsText{
+    margin-left:45px;
+}
+.secondtermsText{
+    margin-left:90px;
+}
+.btnGrid{
+    position:relative;
+    left:14%
+}
+.form-control-phoneNumber, .form-control-registerId {
+    display: inline;
+    width: 80%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+         -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.form-control-userid, .form-control-passwd {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border : none;
+    border-bottom : 1px solid black;
+    outline: none;
+}
+.form-control-userid:focus, .form-control-passwd:focus{
+    border-bottom: 3px solid blue;
+}
+#btnLogin, #btnfindId, #btnfindPwd, #btnnewPwd{
+    width:100%
+}
+
+.findAccount{
+    float: right;
+    font-size: 16px;
+}
+
+.modal-footer-findAccountPage {
+  padding: 15px;
+  text-align: center;
+  border-top: 1px solid #e5e5e5;
+}
