@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/pageController.js"></script>
+    <script type="text/javascript" src="js/memberController.js"></script>
 </head>
 <body>
     <div class="jumbotron" style="background-color:green;">
@@ -23,14 +24,28 @@
                     <h2 class="title" style="color:yellow;">특별한 날을 기억하기 위한 당신만의 일정표!</h2>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <button class="btn btn-lg btn-warning indexButton" onclick="moveLogin()">로그인</button>
+            <div th:if="${session.member == null}">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-lg btn-warning indexButton" onclick="moveLogin()">로그인</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-lg btn-warning indexButton" onclick="openTerms()">회원가입</button>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <button class="btn btn-lg btn-warning indexButton" onclick="openTerms()">회원가입</button>
+            <div th:if="${session.member != null}">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2 class="title" style="color:yellow" th:text="${session.member.nickname} + ' 님 안녕하세요!'"></h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <button class="btn btn-lg btn-warning indexButton" onclick="logout()">로그아웃</button>
+                    </div>
                 </div>
             </div>
         </div>

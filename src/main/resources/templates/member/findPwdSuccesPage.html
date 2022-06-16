@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    
     <script>
-        let findfailData = '[[${finafailAccount}]]';
-
-        if(findfailData === "passwd"){
-            alert("입력하신 정보에 해당하는 회원이 존재하지 않습니다.")
-        }
+      $(function(){
+        alert("비밀번호 변경이 완료 되었습니다. 다시 로그인 해주세요");
+        location.href="/";
+      })
     </script>
 </head>
 <body>

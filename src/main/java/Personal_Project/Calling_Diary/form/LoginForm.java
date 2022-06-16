@@ -1,4 +1,4 @@
-package Personal_Project.Calling_Diary.model;
+package Personal_Project.Calling_Diary.form;
 
 import lombok.Getter;
 import lombok.Setter;

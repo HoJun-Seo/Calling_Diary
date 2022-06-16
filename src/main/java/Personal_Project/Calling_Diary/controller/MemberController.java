@@ -1,11 +1,12 @@
 package Personal_Project.Calling_Diary.controller;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
-import Personal_Project.Calling_Diary.model.FindIdForm;
-import Personal_Project.Calling_Diary.model.FindPwdForm;
-import Personal_Project.Calling_Diary.model.LoginForm;
+import Personal_Project.Calling_Diary.form.FindIdForm;
+import Personal_Project.Calling_Diary.form.FindPwdForm;
+import Personal_Project.Calling_Diary.form.LoginForm;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
+import Personal_Project.Calling_Diary.xss.XssUtil;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.JSONObject;
@@ -46,6 +47,7 @@ public class MemberController {
     @Transactional
     public String checkIdOverlap(@RequestBody String userid){
 
+        userid = XssUtil.cleanXSS(userid);
         Optional<Member> findMember = memberRepository.findById(userid);
         try{
             // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
@@ -97,9 +99,9 @@ public class MemberController {
 
         JSONObject jsonObject = new JSONObject(httpBody);
         String phoneNumber = jsonObject.getString("phoneNumber");
+        phoneNumber = XssUtil.cleanXSS(phoneNumber);
         String overlap = "";
         Optional<Member> byPNumber = memberRepository.findByPNumber(phoneNumber);
-        System.out.println("전화번호 중복확인 api 실행");
         
         try{
             Member member = byPNumber.orElseThrow(() -> new NoSuchElementException());
@@ -123,6 +125,7 @@ public class MemberController {
 
         JSONObject jsonObject = new JSONObject(httpBody);
         String phoneNumber = jsonObject.getString("phoneNumber");
+        phoneNumber = XssUtil.cleanXSS(phoneNumber);
         String numString = memberService.checkPhoneNumber(phoneNumber);
 
         return numString;
@@ -183,30 +186,33 @@ public class MemberController {
     public String findId(FindIdForm findIdForm, Model model){
 
         String pNumber = findIdForm.getPhonenumber();
+        pNumber = XssUtil.cleanXSS(pNumber);
+
         Optional<Member> findmember = memberRepository.findByPNumber(pNumber);
 
-        try{
-            Member member = findmember.orElseThrow(() -> new NoSuchElementException());
-            model.addAttribute("userid", member.getUserid());
-            return "member/findIdSucessPage";
-        }
-        catch (NoSuchElementException ne){
-            // 해당하는 전화번호를 가지고 있는 회원이 존재하지 않을 경우
-            model.addAttribute("finafailAccount", "userid");
-            return "member/findAccountFail";
-        }
+
+        // 전화번호 입력 과정에서 회원 정보에 등록되어 있지 않은 전화번호를 입력 받을 경우 본인인증 및 아이디 찾기 요청이 수행되지 않는다.
+        // 즉, 입력한 전화번호가 회원 정보상에 존재해야만 아이디 찾기 요청이 기능하므로, 컨트롤러로 요청이 넘어왔다는 것은 해당 전화번호로 회원 정보를 조회 시 반드시 정보가 존재한다는 것을 의미한다.
+        // 그렇기 때문에 Optional 메소드를 통해 회원 정보를 조회할 때 조회해온 결과값을 orElseThrow() 가 아닌 get() 메소드로 받는다.(반드시 정보가 존재할 것이므로)
+        Member member = findmember.get();
+        model.addAttribute("userid", member.getUserid());
+        return "member/findIdSucessPage";
+
     }
 
     @PostMapping("/findPwd")
     @Transactional
     public String findPwd(FindPwdForm findPwdForm, Model model){
 
-        String nickname = findPwdForm.getNickname();
-        String pNumber = findPwdForm.getPhonenumber();
-        Optional<Member> findmember = memberRepository.findBy_NickName_pNumber(nickname,pNumber);
+        Member member = new Member();
+        member.setUserid(findPwdForm.getUserid());
+        member.setPhonenumber(findPwdForm.getPhonenumber());
+        member = memberService.cleanXssfindPwd(member);
+
+        Optional<Member> findmember = memberRepository.findPwd(member.getUserid(), member.getPhonenumber());
 
         try {
-            Member member = findmember.orElseThrow(() -> new NoSuchElementException());
+            member = findmember.orElseThrow(() -> new NoSuchElementException());
 
             // 비밀번호 찾기에 성공했을 경우 새로운 비밀번호를 설정해주는 창으로 이동
             // 최종적으로 새로운 비밀번호 입력 완료 후 확인 버튼까지 눌러야만 기존 비밀번호 초기화 및 새로운 비밀번호로 업데이트
@@ -218,5 +224,23 @@ public class MemberController {
             model.addAttribute("finafailAccount", "passwd");
             return "member/findAccountFail";
         }
+    }
+
+    @PostMapping("/newPwdSet")
+    @Transactional
+    public String newPwdSet(Member member){
+
+        member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
+        memberRepository.updatePwd(member.getPasswd(), member.getUserid());
+
+        return "member/findPwdSuccesPage";
+    }
+
+    @DeleteMapping("/logout")
+    public String logout(){
+        session.removeAttribute("member");
+        session.invalidate();
+
+        return "redirect:/";
     }
 }

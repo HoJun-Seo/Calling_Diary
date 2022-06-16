@@ -26,8 +26,8 @@
                             <form action="/member/findId" method="post">
                                 <div class="form-group">
                                     <label for="phoneNumber" class="control-label">휴대 전화</label><br>
-                                    <input type="text" class="form-control-phoneNumber" id="phoneNumber" name="phonenumber" placeholder="휴대전화 번호 입력">
-                                    <button type="button" class="btn btn-primary" onclick="certificate()">본인 인증</button>
+                                    <input type="text" class="form-control-phoneNumber" id="phoneNumber" name="phonenumber" placeholder="휴대전화 번호 입력" onchange="checkPhoneNumber_pattern('findAccount')">
+                                    <button type="button" class="btn btn-primary" id="btnCertificate" onclick="certificate()">본인 인증</button>
                                     <br>
                                     <p class="text-primary"> - '-' 를 제외하고 입력해주세요</p>
                                     <p id="phonNumber_patternCheck"></p>

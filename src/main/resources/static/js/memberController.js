@@ -68,6 +68,11 @@ function checkId_pattern(){
             }
             $("#idCheck").text("");
             idComplete = true;
+
+            // 비밀번호 찾기에서 요청이 넘어온 경우
+            if(btnfindPwd !== null){
+                formCheck();
+            }
         }
      });
 }
@@ -186,7 +191,7 @@ let checkNumber = "";
 // 본인인증 처리 함수
 
 // 입력 전화번호 패턴 검증 함수
-function checkPhoneNumber_pattern(){
+function checkPhoneNumber_pattern(target){
 
     let phoneNumber = document.getElementById("phoneNumber").value;
     const btnCertificate = document.getElementById("btnCertificate");
@@ -203,7 +208,8 @@ function checkPhoneNumber_pattern(){
     .then((response) => response.text())
     .then((checkStatus) => {
         if(checkStatus === "true"){
-            checkPhoneNumber_overlap(phoneNumber);
+            checkPhoneNumber_overlap(phoneNumber, target);
+            
         }
         else{
             $("#phonNumber_patternCheck").text(" - 전화번호 형식이 잘못 되었습니다.");
@@ -215,7 +221,7 @@ function checkPhoneNumber_pattern(){
     })
 }
 
-async function checkPhoneNumber_overlap(phoneNumber){
+async function checkPhoneNumber_overlap(phoneNumber, target){
 
     await fetch("/member/checkPhoneNumber_overlap", {
         method:"post",
@@ -230,15 +236,31 @@ async function checkPhoneNumber_overlap(phoneNumber){
     .then((checkStatus) => {
 
         if(checkStatus === "false"){
-            $("#phonNumber_patternCheck").text("");
-            btnCertificate.disabled = false;
+            if(target === "register"){
+                $("#phonNumber_patternCheck").text("");
+                btnCertificate.disabled = false;
+            }
+            else if(target === "findAccount"){
+                $("#phonNumber_patternCheck").text(" - 전화번호가 등록되어 있지 않습니다.");
+                $("#phonNumber_patternCheck").css("color", "red");
+                phoneComplete = false;
+                btnCertificate.disabled = true;
+                formCheck();
+            }
+            
         }
         else{
-            $("#phonNumber_patternCheck").text(" - 이미 등록되어 있는 전화번호 입니다.");
-            $("#phonNumber_patternCheck").css("color", "red");
-            phoneComplete = false;
-            btnCertificate.disabled = true;
-            formCheck();
+            if(target === "register"){
+                $("#phonNumber_patternCheck").text(" - 이미 등록되어 있는 전화번호 입니다.");
+                $("#phonNumber_patternCheck").css("color", "red");
+                phoneComplete = false;
+                btnCertificate.disabled = true;
+                formCheck();
+            }
+            else if(target === "findAccount"){
+                $("#phonNumber_patternCheck").text("");
+                btnCertificate.disabled = false;
+            }
         }
     })
 
@@ -298,6 +320,7 @@ function formCheck(){
         const btnRegister = document.getElementById("btnRegister");
         const btnfindId = document.getElementById("btnfindId");
         const btnfindPwd = document.getElementById("btnfindPwd");
+        const btnnewPwd = document.getElementById("btnnewPwd");
 
         if(btnRegister !== null){
             btnRegister.disabled = true;
@@ -320,6 +343,15 @@ function formCheck(){
             }
             else{
                 btnfindPwd.disabled = false;
+            }
+        }
+        
+        if(btnnewPwd !== null){
+            if(!pwdComplete || !pwdRepeatComplete){
+                btnnewPwd.disabled = true;
+            }
+            else{
+                btnnewPwd.disabled = false;
             }
         }
     }
@@ -346,4 +378,17 @@ function login(){
         // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
         $("#loginForm").submit();
     }
+}
+
+/* 로그아웃 함수 */
+function logout(){
+
+    fetch('/member/logout', {
+        method:"delete"
+    })
+    .then((response) => {
+        if(response.redirected){
+            location.href=response.url;
+        }
+    })
 }

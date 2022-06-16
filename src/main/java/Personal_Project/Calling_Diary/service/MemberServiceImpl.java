@@ -1,14 +1,11 @@
 package Personal_Project.Calling_Diary.service;
 
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
-import Personal_Project.Calling_Diary.model.LoginForm;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.xss.XssUtil;
-import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -86,6 +83,14 @@ public class MemberServiceImpl implements MemberService {
 
         member.setUserid(XssUtil.cleanXSS(member.getUserid()));
         member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
+        return member;
+    }
+
+    @Override
+    public Member cleanXssfindPwd(Member member) {
+
+        member.setUserid(XssUtil.cleanXSS(member.getUserid()));
+        member.setPhonenumber(XssUtil.cleanXSS(member.getPhonenumber()));
         return member;
     }
 }

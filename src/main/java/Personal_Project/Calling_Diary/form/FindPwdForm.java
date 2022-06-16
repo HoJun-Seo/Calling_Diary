@@ -1,4 +1,4 @@
-package Personal_Project.Calling_Diary.model;
+package Personal_Project.Calling_Diary.form;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class FindPwdForm {
 
-    private String nickname;
+    private String userid;
     private String phonenumber;
 }

@@ -72,7 +72,7 @@ body{
 .form-control-userid:focus, .form-control-passwd:focus{
     border-bottom: 3px solid blue;
 }
-#btnLogin, #btnfindId, #btnfindPwd{
+#btnLogin, #btnfindId, #btnfindPwd, #btnnewPwd{
     width:100%
 }
 
