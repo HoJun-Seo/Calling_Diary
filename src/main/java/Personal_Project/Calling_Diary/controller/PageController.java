@@ -33,4 +33,9 @@ public class PageController {
         return "member/findPwdForm";
     }
 
+    @GetMapping("/mypage")
+    public String moveMypage(){
+        return "member/mypage";
+    }
+
 }
