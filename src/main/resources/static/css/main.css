@@ -3,6 +3,29 @@
 body{
     background-color : green;
 }
+
+.page-header-custom {
+    text-align: right;
+    background-color: #81c147;
+}
+.dropdownButton{
+    background-color: #81c147;
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 35px;
+}
+.dropdownButton:hover{
+    text-decoration: none;
+    color: white;
+}
+
+.dropdown-menu > li > a:hover{
+    color: #262626;
+    text-decoration: none;
+    background: green;
+}
+
 .title {
     text-align: center;
     font-family: 'Jua', sans-serif;
@@ -86,3 +109,5 @@ body{
   text-align: center;
   border-top: 1px solid #e5e5e5;
 }
+
+

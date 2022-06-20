@@ -14,7 +14,38 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <!-- 부트스트랩 탭 테마를 이용해 마이페이지 구현 -->
+      <!-- Modal -->
+      <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h2 class="title" id="myModalLabel">마이페이지</h2>
+                  </div>
+                  <div class="modal-body">
+                      <div role="tabpanel">
+                          <!-- Nav tabs -->
+                          <ul class="nav nav-tabs" role="tablist">
+                              <li role="presentation" class="active"><a href="#memberData" aria-controls="memberDataTab" role="tab" data-toggle="tab">회원 정보</a>
+                              </li>
+                              <li role="presentation"><a href="#allCalendarTab" aria-controls="allCalendarTab" role="tab" data-toggle="tab">등록한 전체 일정</a>
+                              </li>
+                              <li role="presentation"><a href="#favoriteCalendarTab" aria-controls="favoriteCalendarTab" role="tab" data-toggle="tab">즐겨찾기한 일정</a>
+                              </li>
+                          </ul>
+                          <!-- Tab panes -->
+                          <div class="tab-content">
+                              <div role="tabpanel" class="tab-pane active" id="memberData"></div>
+                              <div role="tabpanel" class="tab-pane" id="allCalendarTab">browseTab</div>
+                              <div role="tabpanel" class="tab-pane" id="favoriteCalendarTab">browseTab</div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-primary save">Save changes</button>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
   </div>
 </body>

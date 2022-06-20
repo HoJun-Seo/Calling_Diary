@@ -236,11 +236,17 @@ public class MemberController {
         return "member/findPwdSuccesPage";
     }
 
+    @ResponseBody
     @DeleteMapping("/logout")
     public String logout(){
-        session.removeAttribute("member");
-        session.invalidate();
-
-        return "redirect:/";
+        try{
+            session.removeAttribute("member");
+            session.invalidate();
+        }catch (IllegalStateException se){
+            
+            // 이미 시간이 지나 세션이 만료 되었을 경우에도 메인 인덱스 페이지로 리다이렉트
+            return "logoutSuccess";
+        }
+        return "logoutSuccess";
     }
 }

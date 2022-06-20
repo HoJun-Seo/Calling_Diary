@@ -12,6 +12,19 @@
     <script type="text/javascript" src="js/memberController.js"></script>
 </head>
 <body>
+    <div th:if="${session.member != null}">
+        <div class="page-header-custom">
+            <div class="dropdown">
+                <a class="dropdown-toggle dropdownButton" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
+                    <span th:text="${session.member.nickname}"></span><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" style="background-color: #81C147;" role="menu" aria-labelledby="dropdownMenu">
+                    <li role="presentation"><a role="menuitem" tabindex="1" href="/move/mypage">마이페이지</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="2" href="#" onclick="logout()">로그아웃</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="jumbotron" style="background-color:green;">
         <div class="container-fluid mainIndex">
             <div class="row">
@@ -44,13 +57,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <form action="/member/logout" method="post">
-                            <input type="hidden" name="_method" value="delete"/>
-                            <button class="btn btn-lg btn-warning indexButton" type="submit">로그아웃</button>
-                        </form>
-                    </div>
-                    <div class="col-xs-12">
-                        <a href="/move/mypage" class="btn btn-lg btn-warning indexButton" type="button">마이페이지</a>
+                        <button class="btn btn-lg btn-warning indexButton" type="button">일정 등록하러 가기</button>
                     </div>
                 </div>
             </div>

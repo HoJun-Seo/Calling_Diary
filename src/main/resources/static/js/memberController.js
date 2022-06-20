@@ -4,7 +4,6 @@ $(function(){
         backdrop : false,
         keyboard : false
     });
-
 })
 
 
@@ -378,4 +377,17 @@ function login(){
         // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
         $("#loginForm").submit();
     }
+}
+
+/* 로그아웃 함수 */
+function logout(){
+    fetch('/member/logout', {
+        method:'delete'
+    })
+    .then((response) => response.text())
+    .then((data) => {
+        if(data === "logoutSuccess"){
+            location.href="/";
+        }
+    });
 }
