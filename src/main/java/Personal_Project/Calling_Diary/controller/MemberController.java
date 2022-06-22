@@ -142,6 +142,11 @@ public class MemberController {
         return "member/registerComplete";
     }
 
+    @GetMapping("/login")
+    public String headerPrint(){
+        return "header";
+    }
+
     @PostMapping("/login")
     @Transactional
     public String login(LoginForm loginForm, HttpServletRequest request, Model model){
@@ -248,5 +253,28 @@ public class MemberController {
             return "logoutSuccess";
         }
         return "logoutSuccess";
+    }
+
+    @ResponseBody
+    @GetMapping("/desc")
+    public String memberDesc(){
+        try {
+            if (session != null){
+                Member member = (Member) session.getAttribute("member");
+
+                // desc 는 null 이 허용되기 때문에 세션에 저장되어 있는 객체에서 가져오는 것이 아닌, 데이터베이스에 검색해서 데이터를 가져온다.
+                Optional<String> memberDesc = memberRepository.findDesc(member.getUserid());
+                String desc = memberDesc.orElseThrow(() -> new NoSuchElementException());
+
+                return desc;
+            }
+            else throw new IllegalStateException();
+        }
+        catch (IllegalStateException ie){
+            return "getSessionFail";
+        }
+        catch (NoSuchElementException ne){
+            return "notExistDesc";
+        }
     }
 }

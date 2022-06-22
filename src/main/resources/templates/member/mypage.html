@@ -8,44 +8,50 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/main.css">
-    <script type="text/javascript" src="../js/pageController.js"></script>
-    <script type="text/javascript" src="../js/memberController.js"></script>
+    <script type="text/javascript" src="../js/pageScript.js"></script>
+    <script type="text/javascript" src="../js/memberScript.js"></script>
+    <script type="text/javascript" src="../js/mypageScript.js"></script>
+
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
 </head>
 <body>
+    <div class="headerDIV">
+    </div>
   <div class="container-fluid">
     <div class="row">
-      <!-- Modal -->
-      <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h2 class="title" id="myModalLabel">마이페이지</h2>
+        <div role="tabpanel" class="mainIndex bg-warning" style="width:750px; top: 15% !important; border-radius: 10%;">
+            <!-- Nav tabs -->
+            <h2 class="title">마이페이지</h2>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#memberData" aria-controls="memberDataTab" role="tab" data-toggle="tab">회원 정보</a>
+                </li>
+                <li role="presentation"><a href="#allCalendarTab" aria-controls="allCalendarTab" role="tab" data-toggle="tab">등록한 전체 일정</a>
+                </li>
+                <li role="presentation"><a href="#favoriteCalendarTab" aria-controls="favoriteCalendarTab" role="tab" data-toggle="tab">즐겨찾기한 일정</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="memberData">
+                  <!-- 회원 기본정보, 최근 작성한 일정 몇가지 출력 -->
+                  <h2 class="myPageProfile">&nbsp;&nbsp;&nbsp;&nbsp;나의 프로필</h2>
+                  <span class="myPageNickname">
+                    &nbsp;&nbsp;닉네임 : <em th:text="${session.member.nickname}" style="font-size: 22px;"></em>
+                  </span>
+                  <!--100자 이내 간략한 소개글 : 서버 요청 결과 작성되어 있는 글이 없으면 대체 글자 출력-->
+                  <div class="panel panel-default">
+                    <div class="panel-body memberDesc bg-warning">
+                    </div>
                   </div>
-                  <div class="modal-body">
-                      <div role="tabpanel">
-                          <!-- Nav tabs -->
-                          <ul class="nav nav-tabs" role="tablist">
-                              <li role="presentation" class="active"><a href="#memberData" aria-controls="memberDataTab" role="tab" data-toggle="tab">회원 정보</a>
-                              </li>
-                              <li role="presentation"><a href="#allCalendarTab" aria-controls="allCalendarTab" role="tab" data-toggle="tab">등록한 전체 일정</a>
-                              </li>
-                              <li role="presentation"><a href="#favoriteCalendarTab" aria-controls="favoriteCalendarTab" role="tab" data-toggle="tab">즐겨찾기한 일정</a>
-                              </li>
-                          </ul>
-                          <!-- Tab panes -->
-                          <div class="tab-content">
-                              <div role="tabpanel" class="tab-pane active" id="memberData"></div>
-                              <div role="tabpanel" class="tab-pane" id="allCalendarTab">browseTab</div>
-                              <div role="tabpanel" class="tab-pane" id="favoriteCalendarTab">browseTab</div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-primary save">Save changes</button>
-                  </div>
-              </div>
-          </div>
-      </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="allCalendarTab">browseTab</div>
+                <div role="tabpanel" class="tab-pane" id="favoriteCalendarTab">browseTab</div>
+            </div>
+        </div>
     </div>
   </div>
 </body>

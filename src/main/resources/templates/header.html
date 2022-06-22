@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6 toggleDIV">
+                <a type="button" class="btn btn-success btn-lg" data-toggle="collapse" href="#calendarBar" aria-expanded="false" aria-controls="calendarBar">
+                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="col-xs-6 dropdownDIV">
+                <div class="dropdown">
+                    <a class="dropdown-toggle dropdownButton" type="button" id="dropdownMenu" data-toggle="dropdown" aria-expanded="true">
+                        <span th:text="${session.member.nickname}"></span><span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" style="background-color: #81C147;" role="menu" aria-labelledby="dropdownMenu">
+                        <li role="presentation"><a role="menuitem" tabindex="1" href="/move/mypage">마이페이지</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="2" href="#" onclick="logout()">로그아웃</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="collapse" id="calendarBar">
+                <div class="calendarNav">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li role="presentation"><a class="nav-link" href="#"> - 2022년</a></li>
+                        <li role="presentation"><a class="nav-link" href="#"> - 2023년</a></li>
+                        <li role="presentation"><a class="nav-link" href="#"> - 2024년</a></li>
+                        <li role="presentation"><a class="nav-link" href="#"> - 2025년</a></li>
+                        <li role="presentation"><a class="nav-link" href="#"> - 2026년</a></li>
+                    </ul> 
+                </div> 
+            </div>
+        </div>
+        </div>   
+    </div>
+</body>
+</html>

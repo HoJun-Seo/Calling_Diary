@@ -23,6 +23,7 @@ body{
 .dropdownButton{
     background-color: #81c147;
     text-decoration: none;
+    margin-right: 30px;
     color: white;
     font-size: 35px;
     font-family: 'Jua', sans-serif;
@@ -125,10 +126,23 @@ body{
     font-size: 16px;
 }
 
+/* .modal{
+    pointer-events: none;
+} */
+
 .modal-footer-findAccountPage {
   padding: 15px;
   text-align: center;
   border-top: 1px solid #e5e5e5;
+}
+
+.myPageProfile{
+    font-family: 'Jua', sans-serif;
+}
+.myPageNickname{
+    font-family: 'Jua', sans-serif;
+    display: inline-block;
+    font-size: 26px;
 }
 
 
