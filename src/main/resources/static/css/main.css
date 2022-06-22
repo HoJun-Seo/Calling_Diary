@@ -144,5 +144,9 @@ body{
     display: inline-block;
     font-size: 26px;
 }
+.descBtn{
+  padding: 15px;
+  text-align: center;
+}
 
 

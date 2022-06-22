@@ -277,4 +277,18 @@ public class MemberController {
             return "notExistDesc";
         }
     }
+
+    @ResponseBody
+    @PutMapping("/writedesc")
+    @Transactional
+    public void writeDesc(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+
+        String userid = jsonObject.getString("userid");
+        // XSS 공격방지를 위한 처리
+        String memberdesc = XssUtil.cleanXSS(jsonObject.getString("memberdesc"));
+
+        memberRepository.update(memberdesc, userid);
+    }
 }
