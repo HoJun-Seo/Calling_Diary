@@ -1,5 +1,6 @@
 package Personal_Project.Calling_Diary.controller;
 
+import Personal_Project.Calling_Diary.form.UpdateIdForm;
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
 import Personal_Project.Calling_Diary.form.FindIdForm;
 import Personal_Project.Calling_Diary.form.FindPwdForm;
@@ -43,12 +44,13 @@ public class MemberController {
     }
 
     @ResponseBody
-    @GetMapping("/checkId_overlap")
+    @PostMapping("/checkId_overlap")
     @Transactional
     public String checkIdOverlap(@RequestBody String userid){
 
         userid = XssUtil.cleanXSS(userid);
-        Optional<Member> findMember = memberRepository.findById(userid);
+        JSONObject jsonObject = new JSONObject(userid);
+        Optional<Member> findMember = memberRepository.findById(jsonObject.getString("userid"));
         try{
             // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
             Member member = findMember.orElseThrow(() -> new NoSuchElementException());
@@ -226,19 +228,26 @@ public class MemberController {
         }
         catch (NoSuchElementException ne){
             // 입력한 정보에 해당하는 회원이 존재하지 않는 경우
-            model.addAttribute("finafailAccount", "passwd");
+            model.addAttribute("findfailAccount", "passwd");
             return "member/findAccountFail";
         }
     }
 
-    @PostMapping("/newPwdSet")
+    @ResponseBody
+    @PutMapping("/newPwdSet")
     @Transactional
-    public String newPwdSet(Member member){
+    public String newPwdSet(@RequestBody String httpbody){
 
-        member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
-        memberRepository.updatePwd(member.getPasswd(), member.getUserid());
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String passwd = jsonObject.getString("passwd");
 
-        return "member/findPwdSuccesPage";
+        userid = XssUtil.cleanXSS(userid);
+        passwd = XssUtil.cleanXSS(passwd);
+
+        memberRepository.updatePwd(passwd, userid);
+
+        return "findPwdSucces";
     }
 
     @ResponseBody
@@ -290,5 +299,36 @@ public class MemberController {
         String memberdesc = XssUtil.cleanXSS(jsonObject.getString("memberdesc"));
 
         memberRepository.update(memberdesc, userid);
+    }
+
+    @ResponseBody
+    @PutMapping("/updateId")
+    @Transactional
+    public String updateId(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String inputCurUID = jsonObject.getString("curUID");
+        String userid = jsonObject.getString("userid");
+
+        inputCurUID = XssUtil.cleanXSS(inputCurUID);
+        userid = XssUtil.cleanXSS(userid);
+
+        if (session != null){
+            Member member = (Member) session.getAttribute("member");
+            
+            // 입력받은 현재 아이디와 세션에 있는 아이디 동일성 검증
+            if (!member.getUserid().equals(inputCurUID)){
+                // 같지 않을 경우 반환
+                return "curIdNotcorrect";
+            }
+            else{
+                // 새 비밀번호 입력값으로 아이디 변경
+                memberRepository.updateId(userid, inputCurUID);
+                return "updateIdSuccess";
+            }
+        }
+        else {
+            return "sessionNotExist";
+        }
     }
 }

@@ -27,6 +27,7 @@ function nochk(){
 
 // 가입 양식 입력확인용 변수들
 let idComplete = false;
+let idComplete_new = false;
 let pwdComplete = false;
 let pwdRepeatComplete = false;
 let nicknameComplete = false;
@@ -37,6 +38,7 @@ function checkId_pattern(){
 
     let userid = document.getElementById("userId").value;
     const btnIdOverlap = document.getElementById("btnIdOverlap");
+    const btnfindPwd = document.getElementById("btnfindPwd");
 
     fetch("/member/checkId_pattern", {
          method:"post",
@@ -50,9 +52,10 @@ function checkId_pattern(){
      .then((response) => response.text())
      .then((checkStatus) => {
         if(checkStatus === "false"){
+            
             $("#idCheck").text(" - 아이디 형식이 잘못 되었습니다.");
             $("#idCheck").css("color","red");
-            idComplete = false;
+            idComplete = false; 
 
             // 회원가입에서 요청이 넘어온 경우
             if(btnIdOverlap !== null){
@@ -61,7 +64,7 @@ function checkId_pattern(){
             formCheck();
         }
         else{
-            // 회원가입 에서 요청이 넘어온 경우
+            // 회원가입에서 요청이 넘어온 경우
             if(btnIdOverlap !== null){
                 btnIdOverlap.disabled = false;
             }
@@ -74,6 +77,36 @@ function checkId_pattern(){
             }
         }
      });
+}
+
+function checkcurId_pattern(){
+
+    let userid = document.getElementById("curUID").value;
+
+    fetch("/member/checkId_pattern", {
+        method:"post",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+           "userid":userid
+        })
+    })
+    .then((response) => response.text())
+    .then((checkStatus) => {
+       if(checkStatus === "false"){
+           
+           $("#curidCheck").text(" - 아이디 형식이 잘못 되었습니다.");
+           $("#curidCheck").css("color","red");
+           idComplete_new = false;
+
+           formCheck();
+       }
+       else{
+           $("#curidCheck").text("");
+           idComplete_new = true;
+       }
+    });
 }
 
 function checkId_overlap(){
@@ -91,8 +124,10 @@ function checkId_overlap(){
     })
     .then((response) => response.text())
     .then((data) => {
+
         if(data === "possbleId"){
-            $("#idCheck").text("");
+            $("#idCheck").text(" - 사용가능한 아이디 입니다.");
+            $("#idCheck").css("color", "blue");
             idComplete = true;    
         }
         else if(data === "impossbleId"){
@@ -314,12 +349,13 @@ function checkNumberConfirm(){
 }
 
 function formCheck(){
-    // 모든 양식들 중 하나라도 규칙을 준수하고 있지 않다면 가입 버튼 비활성화
-    if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
+
+    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
         const btnRegister = document.getElementById("btnRegister");
         const btnfindId = document.getElementById("btnfindId");
         const btnfindPwd = document.getElementById("btnfindPwd");
         const btnnewPwd = document.getElementById("btnnewPwd");
+        const btnIdUpdate = document.getElementById("btnIdUpdate");
 
         if(btnRegister !== null){
             btnRegister.disabled = true;
@@ -351,6 +387,16 @@ function formCheck(){
             }
             else{
                 btnnewPwd.disabled = false;
+            }
+        }
+
+        // 아이디 변경에서 요청이 들어온 경우
+        if(btnIdUpdate !== null){
+            if(!idComplete || !idComplete_new){
+                btnIdUpdate.disabled = true;
+            }
+            else{
+                btnIdUpdate.disabled = false;
             }
         }
     }

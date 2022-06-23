@@ -7,13 +7,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script>
-        let findfailData = '[[${findfailAccount}]]';
-
-        if(findfailData === "passwd"){
-            alert("입력하신 정보에 해당하는 회원이 존재하지 않습니다.")
-        }
+    <script type="text/javascript" src="../js/pageScript.js"></script>
+    <script type="text/javascript" src="../js/memberScript.js"></script>
+    <script type="text/javascript" src="../js/mypageScript.js"></script>
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
 <body>
 

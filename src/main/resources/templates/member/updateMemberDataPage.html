@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <script type="text/javascript" src="../js/pageScript.js"></script>
+    <script type="text/javascript" src="../js/memberScript.js"></script>
+    <script type="text/javascript" src="../js/mypageScript.js"></script>
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+</head>
+<body>
+    <div class="headerDIV">
+    </div>
+    <div class="container-fluid mainIndex">
+        <div class="row">
+            <div class="col-xs-12 updateDataTitle">
+                <h1>회원정보 변경하기</h1>
+                <h3>각종 정보를 변경해보세요!</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 updateDataBtnGroup">
+                <button class="btn btn-warning btn-lg updateDataBtn" onclick="moveUidChange()">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><br>
+                    아이디 변경
+                </button>&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-warning btn-lg updateDataBtn" onclick="movePwdChange()">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span><br>
+                    비밀번호 변경</button>&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-warning btn-lg updateDataBtn" onclick="moveNicknameChange()">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span><br>
+                    닉네임 변경
+                </button>&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-warning btn-lg updateDataBtn">
+                    <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span><br>
+                    전화번호 변경
+                </button>
+            </div>      
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
     <script type="text/javascript" src="../js/pageScript.js"></script>
     <script type="text/javascript" src="../js/memberScript.js"></script>
     <script type="text/javascript" src="../js/mypageScript.js"></script>
@@ -15,7 +16,6 @@
         let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
 <body>
     <div class="container-fluid">
@@ -29,7 +29,6 @@
                     <h2 class="title text-default">새 비밀번호 설정</h2>
                   </div>
                   <div class="modal-body">
-                    <form action="/member/newPwdSet" method="post">
                       <div class="form-group">
                         <label for="passwd" class="control-label">새 비밀번호</label>
                         <input type="password" class="form-control" id="passwd" name="passwd" placeholder="새 비밀번호 입력" onchange="checkPwd_pattern()"><br>
@@ -43,12 +42,12 @@
                         <p class="text-primary"> - 새 비밀번호를 한번 더 입력해주세요</p>
                         <p id="pwdCheckRepeat"></p>
                       </div>
-
-                      <input type="hidden" th:value="${member.userid}" id="userid">
+                      <div class="form-group">
+                        <input type="hidden" th:value="${session.member.userid}" id="userid">
+                      </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="btnnewPwd" onclick="updatePwd()" disabled>비밀번호 변경</button>
                       </div>
-                    </form>
                   </div>
                 </div>
               </div>
