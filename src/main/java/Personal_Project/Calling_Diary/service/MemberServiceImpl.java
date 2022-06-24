@@ -1,6 +1,5 @@
 package Personal_Project.Calling_Diary.service;
 
-import Personal_Project.Calling_Diary.form.UpdateIdForm;
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.xss.XssUtil;
@@ -93,12 +92,5 @@ public class MemberServiceImpl implements MemberService {
         member.setUserid(XssUtil.cleanXSS(member.getUserid()));
         member.setPhonenumber(XssUtil.cleanXSS(member.getPhonenumber()));
         return member;
-    }
-
-    @Override
-    public UpdateIdForm cleanXssUpdateId(UpdateIdForm updateIdForm) {
-        updateIdForm.setCurUID(XssUtil.cleanXSS(updateIdForm.getCurUID()));
-        updateIdForm.setUserid(XssUtil.cleanXSS(updateIdForm.getUserid()));
-        return updateIdForm;
     }
 }

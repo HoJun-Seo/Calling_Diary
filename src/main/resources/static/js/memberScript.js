@@ -32,6 +32,7 @@ let pwdComplete = false;
 let pwdRepeatComplete = false;
 let nicknameComplete = false;
 let phoneComplete = false;
+let phoneConfirmComplete = false;
 
 // 아이디 입력 값 규칙준수 여부 확인
 function checkId_pattern(){
@@ -333,7 +334,7 @@ function checkNumberConfirm(){
         $("#phoneNumber").attr("readonly", true);
         $("#checkNumber").attr("readonly", true);
         alert("인증이 완료 되었습니다.");
-        phoneComplete = true;
+        phoneConfirmComplete = true;
 
         formCheck();
     }
@@ -342,7 +343,7 @@ function checkNumberConfirm(){
         $("#phoneNumberCheck").after("<br>");
         $("#phoneNumberCheck").text(" - 인증번호를 다시 요청하거나, 전화번호를 잘못 입력하지는 않았는지 확인해주세요");
         $("#phoneNumberCheck").css("color", "red");
-        phoneComplete = false;
+        phoneConfirmComplete = false;
         formCheck();
     }
 
@@ -350,12 +351,14 @@ function checkNumberConfirm(){
 
 function formCheck(){
 
-    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete){
+    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete){
         const btnRegister = document.getElementById("btnRegister");
         const btnfindId = document.getElementById("btnfindId");
         const btnfindPwd = document.getElementById("btnfindPwd");
         const btnnewPwd = document.getElementById("btnnewPwd");
         const btnIdUpdate = document.getElementById("btnIdUpdate");
+        const btnNicknameUpdate = document.getElementById("btnNicknameUpdate");
+        const btnPhoneNumberUpdate = document.getElementById("btnPhoneNumberUpdate");
 
         if(btnRegister !== null){
             btnRegister.disabled = true;
@@ -397,6 +400,26 @@ function formCheck(){
             }
             else{
                 btnIdUpdate.disabled = false;
+            }
+        }
+
+        // 닉네임 변경에서 요청이 들어온 경우
+        if(btnNicknameUpdate !== null){
+            if(!nicknameComplete){
+                btnNicknameUpdate.disabled = true;
+            }
+            else{
+                btnNicknameUpdate.disabled = false;
+            }
+        }
+
+        // 전화번호 변경에서 요청이 들어온 경우
+        if(btnPhoneNumberUpdate !== null){
+            if(!phoneComplete || !phoneConfirmComplete){
+                btnPhoneNumberUpdate.disabled = true;
+            }
+            else{
+                btnPhoneNumberUpdate.disabled = false;
             }
         }
     }

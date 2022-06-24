@@ -1,6 +1,5 @@
 package Personal_Project.Calling_Diary.controller;
 
-import Personal_Project.Calling_Diary.form.UpdateIdForm;
 import Personal_Project.Calling_Diary.interfaceGroup.MemberService;
 import Personal_Project.Calling_Diary.form.FindIdForm;
 import Personal_Project.Calling_Diary.form.FindPwdForm;
@@ -328,6 +327,57 @@ public class MemberController {
             }
         }
         else {
+            return "sessionNotExist";
+        }
+    }
+
+    @ResponseBody
+    @PutMapping("/updateNickname")
+    @Transactional
+    public String updateNickname(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String nickname = jsonObject.getString("nickname");
+
+        userid = XssUtil.cleanXSS(userid);
+        nickname = XssUtil.cleanXSS(nickname);
+
+        if(session != null){
+
+            memberRepository.updateNickname(nickname, userid);
+            Member member = (Member) session.getAttribute("member");
+            member.setNickname(nickname);
+            session.setAttribute("member", member);
+            return "updateNicknameSuccess";
+
+        }
+        else{
+            return "sessionNotExist";
+        }
+    }
+
+    @ResponseBody
+    @PutMapping("/updatePhonenumber")
+    @Transactional
+    public String updatePhonenumber(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String phonenumber = jsonObject.getString("phonenumber");
+
+        userid = XssUtil.cleanXSS(userid);
+        phonenumber = XssUtil.cleanXSS(phonenumber);
+
+        if(session != null){
+
+            memberRepository.updatePhonenumber(phonenumber, userid);
+            Member member = (Member) session.getAttribute("member");
+            member.setPhonenumber(phonenumber);
+            session.setAttribute("member", member);
+            return "updatePhonenumberSuccess";
+        }
+        else{
             return "sessionNotExist";
         }
     }

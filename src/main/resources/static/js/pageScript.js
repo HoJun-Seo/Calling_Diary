@@ -21,3 +21,7 @@ function movePwdChange(){
 function moveNicknameChange(){
     location.href="/move/nicknameChangePage";
 }
+
+function movePhonenumberChange(){
+    location.href="/move/phonenumberChangePage";
+}

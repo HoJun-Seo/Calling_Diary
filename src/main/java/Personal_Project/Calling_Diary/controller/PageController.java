@@ -62,4 +62,9 @@ public class PageController {
     public String nicknameChangePage(){
         return "member/nicknameChangePage";
     }
+
+    @GetMapping("/phonenumberChangePage")
+    public String phonenumberChangePage(){
+        return "member/phonenumberChangePage";
+    }
 }

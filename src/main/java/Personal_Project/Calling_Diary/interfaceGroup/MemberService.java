@@ -1,6 +1,5 @@
 package Personal_Project.Calling_Diary.interfaceGroup;
 
-import Personal_Project.Calling_Diary.form.UpdateIdForm;
 import Personal_Project.Calling_Diary.model.Member;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
@@ -22,5 +21,4 @@ public interface MemberService {
 
     public Member cleanXssfindPwd(Member member);
 
-    UpdateIdForm cleanXssUpdateId(UpdateIdForm updateIdForm);
 }

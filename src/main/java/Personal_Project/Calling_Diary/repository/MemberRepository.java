@@ -1,6 +1,5 @@
 package Personal_Project.Calling_Diary.repository;
 
-import Personal_Project.Calling_Diary.form.UpdateIdForm;
 import Personal_Project.Calling_Diary.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,4 +29,12 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Modifying
     @Query("update Member m set m.userid= :userid where m.userid= :curUID")
     public void updateId(@Param("userid")String userid, @Param("curUID")String curUID);
+
+    @Modifying
+    @Query("update Member m set m.nickname= :nickname where m.userid= :userid")
+    public void updateNickname(@Param("nickname")String nickname, @Param("userid")String userid);
+
+    @Modifying
+    @Query("update Member m set m.phonenumber= :phonenumber where m.userid= :userid")
+    public void updatePhonenumber(@Param("phonenumber")String phonenumber, @Param("userid") String userid);
 }
