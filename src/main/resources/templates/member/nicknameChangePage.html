@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
     <script type="text/javascript" src="../js/pageScript.js"></script>
     <script type="text/javascript" src="../js/memberScript.js"></script>
     <script type="text/javascript" src="../js/mypageScript.js"></script>
@@ -15,7 +16,6 @@
         let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
 <body>
     <div class="container-fluid">
@@ -26,29 +26,21 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <h3 class="title text-default" id="myModalLabel">Calling Diary!</h3>
-                    <h2 class="title text-default">새 비밀번호 설정</h2>
+                    <h2 class="title text-default">닉네임 변경</h2>
                   </div>
                   <div class="modal-body">
-                    <form action="/member/newPwdSet" method="post">
                       <div class="form-group">
-                        <label for="passwd" class="control-label">새 비밀번호</label>
-                        <input type="password" class="form-control" id="passwd" name="passwd" placeholder="새 비밀번호 입력" onchange="checkPwd_pattern()"><br>
-                        <p class="text-primary"> - 숫자,특문 각 1회 이상, 영문은 2개 이상을 사용해주세요</p>
-                        <p class="text-primary"> - 8자리 이상 입력해주세요</p>
-                        <p id="pwdCheck"></p>
+                        <label for="nickname" class="control-label">닉네임(*)</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임 입력" onchange="checkNickname_pattern()"><br>
+                        <p class="text-primary"> - 특수문자를 제외한 2~20자리 닉네임을 작성해주세요</p>
+                        <p id="nicknameCheck"></p>
                       </div>
                       <div class="form-group">
-                        <label for="checkPasswd" class="control-label">새 비밀번호 확인</label>
-                        <input type="password" class="form-control" id="checkPasswd" placeholder="새 비밀번호 확인" onchange="checkPwd_repeat()" disabled><br>
-                        <p class="text-primary"> - 새 비밀번호를 한번 더 입력해주세요</p>
-                        <p id="pwdCheckRepeat"></p>
+                        <input type="hidden" th:value="${session.member.userid}" id="userid">
                       </div>
-
-                      <input type="hidden" th:value="${member.userid}" id="userid">
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="btnnewPwd" onclick="updatePwd()" disabled>비밀번호 변경</button>
+                        <button type="button" class="btn btn-primary" id="btnNicknameUpdate" onclick="updateNickname()" disabled>닉네임 변경</button>
                       </div>
-                    </form>
                   </div>
                 </div>
               </div>

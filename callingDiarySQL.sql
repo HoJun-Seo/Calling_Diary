@@ -7,5 +7,6 @@ create table member(
     phonenumber varchar(30)
 );
 
-delete from member where userid="ghwns6659";
-select * from memeber;
+delete from member where userid="sas6659";
+select * from member;
+alter table member add memberdesc varchar(100);

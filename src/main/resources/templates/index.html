@@ -6,12 +6,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/pageController.js"></script>
-    <script type="text/javascript" src="js/memberController.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="js/pageScript.js"></script>
+    <script type="text/javascript" src="js/memberScript.js"></script>
+    <script th:inline="javascript">
+        let memberSession = '[[${session.member}]]';
+            
+        if(memberSession !== "null"){
+            fetch("/member/login")
+                .then((response) => response.text())
+                .then((data) => {
+                    $(".headerDIV").html(data);
+                })
+        }
+    </script>
 </head>
 <body>
+    <div class="headerDIV">
+    </div>
     <div class="jumbotron" style="background-color:green;">
         <div class="container-fluid mainIndex">
             <div class="row">
@@ -44,10 +57,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <form action="/member/logout" method="post">
-                            <input type="hidden" name="_method" value="delete"/>
-                            <button class="btn btn-lg btn-warning indexButton" type="submit">로그아웃</button>
-                        </form>
+                        <button class="btn btn-lg btn-warning indexButton" type="button">일정 등록하러 가기</button>
                     </div>
                 </div>
             </div>

@@ -43,12 +43,13 @@ public class MemberController {
     }
 
     @ResponseBody
-    @GetMapping("/checkId_overlap")
+    @PostMapping("/checkId_overlap")
     @Transactional
     public String checkIdOverlap(@RequestBody String userid){
 
         userid = XssUtil.cleanXSS(userid);
-        Optional<Member> findMember = memberRepository.findById(userid);
+        JSONObject jsonObject = new JSONObject(userid);
+        Optional<Member> findMember = memberRepository.findById(jsonObject.getString("userid"));
         try{
             // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
             Member member = findMember.orElseThrow(() -> new NoSuchElementException());
@@ -142,6 +143,11 @@ public class MemberController {
         return "member/registerComplete";
     }
 
+    @GetMapping("/login")
+    public String headerPrint(){
+        return "header";
+    }
+
     @PostMapping("/login")
     @Transactional
     public String login(LoginForm loginForm, HttpServletRequest request, Model model){
@@ -221,26 +227,158 @@ public class MemberController {
         }
         catch (NoSuchElementException ne){
             // 입력한 정보에 해당하는 회원이 존재하지 않는 경우
-            model.addAttribute("finafailAccount", "passwd");
+            model.addAttribute("findfailAccount", "passwd");
             return "member/findAccountFail";
         }
     }
 
-    @PostMapping("/newPwdSet")
+    @ResponseBody
+    @PutMapping("/newPwdSet")
     @Transactional
-    public String newPwdSet(Member member){
+    public String newPwdSet(@RequestBody String httpbody){
 
-        member.setPasswd(XssUtil.cleanXSS(member.getPasswd()));
-        memberRepository.updatePwd(member.getPasswd(), member.getUserid());
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String passwd = jsonObject.getString("passwd");
 
-        return "member/findPwdSuccesPage";
+        userid = XssUtil.cleanXSS(userid);
+        passwd = XssUtil.cleanXSS(passwd);
+
+        memberRepository.updatePwd(passwd, userid);
+
+        return "findPwdSucces";
     }
 
+    @ResponseBody
     @DeleteMapping("/logout")
     public String logout(){
-        session.removeAttribute("member");
-        session.invalidate();
+        try{
+            session.removeAttribute("member");
+            session.invalidate();
+        }catch (IllegalStateException se){
+            
+            // 이미 시간이 지나 세션이 만료 되었을 경우에도 메인 인덱스 페이지로 리다이렉트
+            return "logoutSuccess";
+        }
+        return "logoutSuccess";
+    }
 
-        return "redirect:/";
+    @ResponseBody
+    @GetMapping("/desc")
+    public String memberDesc(){
+        try {
+            if (session != null){
+                Member member = (Member) session.getAttribute("member");
+
+                // desc 는 null 이 허용되기 때문에 세션에 저장되어 있는 객체에서 가져오는 것이 아닌, 데이터베이스에 검색해서 데이터를 가져온다.
+                Optional<String> memberDesc = memberRepository.findDesc(member.getUserid());
+                String desc = memberDesc.orElseThrow(() -> new NoSuchElementException());
+
+                return desc;
+            }
+            else throw new IllegalStateException();
+        }
+        catch (IllegalStateException ie){
+            return "getSessionFail";
+        }
+        catch (NoSuchElementException ne){
+            return "notExistDesc";
+        }
+    }
+
+    @ResponseBody
+    @PutMapping("/writedesc")
+    @Transactional
+    public void writeDesc(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+
+        String userid = jsonObject.getString("userid");
+        // XSS 공격방지를 위한 처리
+        String memberdesc = XssUtil.cleanXSS(jsonObject.getString("memberdesc"));
+
+        memberRepository.update(memberdesc, userid);
+    }
+
+    @ResponseBody
+    @PutMapping("/updateId")
+    @Transactional
+    public String updateId(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String inputCurUID = jsonObject.getString("curUID");
+        String userid = jsonObject.getString("userid");
+
+        inputCurUID = XssUtil.cleanXSS(inputCurUID);
+        userid = XssUtil.cleanXSS(userid);
+
+        if (session != null){
+            Member member = (Member) session.getAttribute("member");
+            
+            // 입력받은 현재 아이디와 세션에 있는 아이디 동일성 검증
+            if (!member.getUserid().equals(inputCurUID)){
+                // 같지 않을 경우 반환
+                return "curIdNotcorrect";
+            }
+            else{
+                // 새 비밀번호 입력값으로 아이디 변경
+                memberRepository.updateId(userid, inputCurUID);
+                return "updateIdSuccess";
+            }
+        }
+        else {
+            return "sessionNotExist";
+        }
+    }
+
+    @ResponseBody
+    @PutMapping("/updateNickname")
+    @Transactional
+    public String updateNickname(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String nickname = jsonObject.getString("nickname");
+
+        userid = XssUtil.cleanXSS(userid);
+        nickname = XssUtil.cleanXSS(nickname);
+
+        if(session != null){
+
+            memberRepository.updateNickname(nickname, userid);
+            Member member = (Member) session.getAttribute("member");
+            member.setNickname(nickname);
+            session.setAttribute("member", member);
+            return "updateNicknameSuccess";
+
+        }
+        else{
+            return "sessionNotExist";
+        }
+    }
+
+    @ResponseBody
+    @PutMapping("/updatePhonenumber")
+    @Transactional
+    public String updatePhonenumber(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String userid = jsonObject.getString("userid");
+        String phonenumber = jsonObject.getString("phonenumber");
+
+        userid = XssUtil.cleanXSS(userid);
+        phonenumber = XssUtil.cleanXSS(phonenumber);
+
+        if(session != null){
+
+            memberRepository.updatePhonenumber(phonenumber, userid);
+            Member member = (Member) session.getAttribute("member");
+            member.setPhonenumber(phonenumber);
+            session.setAttribute("member", member);
+            return "updatePhonenumberSuccess";
+        }
+        else{
+            return "sessionNotExist";
+        }
     }
 }

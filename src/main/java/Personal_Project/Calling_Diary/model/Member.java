@@ -1,5 +1,6 @@
 package Personal_Project.Calling_Diary.model;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -26,6 +27,8 @@ public class Member {
     @Column(name = "phonenumber")
     private String phonenumber;
 
+    @Column(name = "memberdesc", nullable = true)
+    private String memberdesc;
     @Override
     public String toString() {
         return "Member : { userid : " + this.userid + ", passwd : " + this.passwd + ", nickname : " + this.nickname + ", phoneNumber : " + this.phonenumber + " }";

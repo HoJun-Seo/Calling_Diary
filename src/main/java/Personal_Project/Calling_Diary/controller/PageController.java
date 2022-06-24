@@ -33,4 +33,38 @@ public class PageController {
         return "member/findPwdForm";
     }
 
+    @GetMapping("/findPwdSuccesPage")
+    public String findPwdSuccesPage(){
+        return "member/findPwdSuccesPage";
+    }
+
+    @GetMapping("/mypage")
+    public String moveMypage(){
+        return "member/mypage";
+    }
+
+    @GetMapping("/updateMemberDataPage")
+    public String updateMemberDataPage(){
+        return "member/updateMemberDataPage";
+    }
+
+    @GetMapping("/uidChangePage")
+    public String moveUidChange(){
+        return "member/uidChangePage";
+    }
+
+    @GetMapping("/pwdChangePage")
+    public String pwdChangePage(){
+        return "member/pwdChangePage";
+    }
+
+    @GetMapping("/nicknameChangePage")
+    public String nicknameChangePage(){
+        return "member/nicknameChangePage";
+    }
+
+    @GetMapping("/phonenumberChangePage")
+    public String phonenumberChangePage(){
+        return "member/phonenumberChangePage";
+    }
 }

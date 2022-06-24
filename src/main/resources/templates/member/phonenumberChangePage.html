@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../js/pageScript.js"></script>
+    <script type="text/javascript" src="../js/memberScript.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+      let memberSession = $.parseJSON('[[${session.member}]]');
+  </script>
+  <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="modal" id="myModal" style="margin-top : 210px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="title text-default" id="myModalLabel">Calling Diary!</h3>
+                            <h2 class="title text-default">전화번호 변경하기</h2>
+                        </div>
+                        <div class="modal-body">
+                              <div class="form-group">
+                                  <label for="phoneNumber" class="control-label">휴대 전화</label><br>
+                                  <input type="text" class="form-control-phoneNumber" id="phoneNumber" name="phonenumber" placeholder="휴대전화 번호 입력" onchange="checkPhoneNumber_pattern('register')">
+                                  <button type="button" class="btn btn-primary" id="btnCertificate" onclick="certificate()">본인 인증</button>
+                                  <br>
+                                  <p class="text-primary"> - '-' 를 제외하고 입력해주세요</p>
+                                  <p id="phonNumber_patternCheck"></p>
+
+                                  <label for="checkNumber" class="control-label">인증번호 확인</label><br>
+                                  <input type="text" class="form-control-phoneNumber" style="width:75% !important;" id="checkNumber" placeholder="인증번호 입력">
+                                  <button type="button" class="btn btn-primary" onclick="checkNumberConfirm()">인증번호 확인</button>
+                                  <br>
+                                  <p class="text-primary"> - 문자 메시지로 전송된 인증번호를 입력해주세요</p>
+                                  <p id="phoneNumberCheck"></p>
+
+                                  <div class="form-group">
+                                    <input type="hidden" th:value="${session.member.userid}" id="userid">
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="submit" class="btn btn-primary" id="btnPhoneNumberUpdate" onclick="updatePhoneNumber()" disabled>변경하기</button>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

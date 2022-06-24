@@ -20,4 +20,5 @@ public interface MemberService {
     public Member cleanXssLogin(Member member);
 
     public Member cleanXssfindPwd(Member member);
+
 }
