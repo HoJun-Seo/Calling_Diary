@@ -3,17 +3,16 @@ var member = memberSession;
 $(function(){
 
     if(member !== null){
-        fetch("/member/login")
+        fetch("/header")
             .then((response) => response.text())
             .then((data) => {
                 $(".headerDIV").html(data);
             });
         
-        fetch("/member/desc")
+        fetch("/members/"+member.uid+"/desc")
             .then((response) => response.text())
             .then((data) => {
                 if(data === "notExistDesc"){         
-                    $('[data-toggle="popover"]').popover();
                     $(".memberDesc").html("<a href=\"#\" class=\"writeDesc\">이곳을 클릭하면 자신을 간략하게 표현할 수 있습니다</a>");
                 }
                 else if(data === "getSessionFail"){
@@ -43,6 +42,7 @@ $(function(){
     }
 })
 
+
 function writeDescCancel(){
     location.reload();
 }
@@ -51,13 +51,12 @@ function writeDesc(){
     let desc = $(".writeDescArea").val();
     member.memberdesc = desc;
 
-    fetch('/member/writedesc', {
+    fetch('/members/'+member.uid+'/desc', {
         method:"put",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            "userid":member.userid,
             "memberdesc":member.memberdesc
         })
     })
@@ -72,7 +71,7 @@ function updateId(){
     let curUID = $("#curUID").val();
     let userid = $("#userId").val();
 
-    fetch("/member/updateId", {
+    fetch("/members/"+member.uid+"/change/userid", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -101,16 +100,14 @@ function updateId(){
 
 function updatePwd(){
 
-    let userid = $("#userid").val();
     let passwd = $("#passwd").val();
 
-    fetch("/member/newPwdSet", {
+    fetch("/members/"+member.uid+"/change/pwd", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            "userid":userid,
             "passwd":passwd
         })
     })
@@ -118,7 +115,7 @@ function updatePwd(){
     .then((data) => {
         if(data === "findPwdSucces"){
             if(member === null){
-                location.href="/move/findPwdSuccesPage";
+                location.href="/findPwdSuccesPage";
             }
             else if(member !== null){
                 alert("비밀번호 변경이 완료 되었습니다. 다시 로그인 해주세요");
@@ -130,16 +127,14 @@ function updatePwd(){
 
 function updateNickname(){
 
-    let userid = $("#userid").val();
     let nickname = $("#nickname").val();
 
-    fetch("/member/updateNickname", {
+    fetch("/members/"+member.uid+"/change/nickname", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            "userid":userid,
             "nickname":nickname
         })
     })
@@ -150,24 +145,23 @@ function updateNickname(){
             moveLogin();
         }
         else if(data === "updateNicknameSuccess"){
+
             alert("닉네임이 변경되었습니다.")
-            location.href="/move/mypage";
+            location.href="/mypage";
         }
     })
 }
 
 function updatePhoneNumber(){
 
-    let userid = $("#userid").val();
     let phonenumber = $("#phoneNumber").val();
 
-    fetch("/member/updatePhonenumber", {
+    fetch("/members/"+member.uid+"/change/phonenumber", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            "userid":userid,
             "phonenumber":phonenumber
         })
     })
@@ -179,7 +173,7 @@ function updatePhoneNumber(){
         }
         else if(data === "updatePhonenumberSuccess"){
             alert("전화번호가 변경되었습니다.");
-            location.href="/move/mypage";
+            location.href="/mypage";
         }
     })
 }

@@ -20,10 +20,11 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -31,97 +32,9 @@ public class MemberController {
 
     private HttpSession session;
 
-    @ResponseBody
-    @PostMapping("/checkId_pattern")
-    public boolean checkIdPattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String userid = jsonObject.getString("userid");
-
-        boolean checkStatus = memberService.checkIdPattern(userid);
-        return checkStatus;
-    }
 
     @ResponseBody
-    @PostMapping("/checkId_overlap")
-    @Transactional
-    public String checkIdOverlap(@RequestBody String userid){
-
-        userid = XssUtil.cleanXSS(userid);
-        JSONObject jsonObject = new JSONObject(userid);
-        Optional<Member> findMember = memberRepository.findById(jsonObject.getString("userid"));
-        try{
-            // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
-            Member member = findMember.orElseThrow(() -> new NoSuchElementException());
-            return "impossbleId";
-        }
-        catch (NoSuchElementException ne){
-            return "possbleId";
-        }
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPwd_pattern")
-    public boolean checkPwdPattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String pwd = jsonObject.getString("passwd");
-
-        boolean checkStatus = memberService.checkPwdPattern(pwd);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkNickname_pattern")
-    public boolean checkNicknamePattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String nickname = jsonObject.getString("nickname");
-
-        boolean checkStatus = memberService.checkNicknamePattern(nickname);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPhoneNumber_pattern")
-    public boolean checkPhoneNumberPattern(@RequestBody String httpBody, RedirectAttributes redirectAttributes){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String phoneNumber = jsonObject.getString("phoneNumber");
-
-        boolean checkStatus = memberService.checkPhoneNumberPattern(phoneNumber);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPhoneNumber_overlap")
-    @Transactional
-    public String checkPhoneNumberOverlap(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String phoneNumber = jsonObject.getString("phoneNumber");
-        phoneNumber = XssUtil.cleanXSS(phoneNumber);
-        String overlap = "";
-        Optional<Member> byPNumber = memberRepository.findByPNumber(phoneNumber);
-        
-        try{
-            Member member = byPNumber.orElseThrow(() -> new NoSuchElementException());
-            if (member.getPhonenumber().equals(phoneNumber)){
-                // 전화번호가 중복된다는 뜻의 true
-                overlap = "true";
-            }
-        }
-        catch (NoSuchElementException ne){
-            // 전화번호가 중복되지 않는다는 뜻의 false
-            overlap = "false";
-        }
-
-        return overlap;
-    }
-
-
-    @ResponseBody
-    @PostMapping("/check_phoneNumber")
+    @PostMapping("/sms/phonenumber")
     public String checkPhoneNumber(@RequestBody String httpBody) throws CoolsmsException {
 
         JSONObject jsonObject = new JSONObject(httpBody);
@@ -132,20 +45,18 @@ public class MemberController {
         return numString;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/new")
     @Transactional
     public String memberRegister(Member member){
 
         // XSS 스크립트 입력 방지 실행
+        String uid = UUID.randomUUID().toString(); // REST API 의 URI 상에서 각 회원을 고유하게 식별하기 위한 식별키 생성
+        member.setUid(uid);
+
         member = memberService.cleanXssRegister(member);
         memberRepository.save(member);
 
         return "member/registerComplete";
-    }
-
-    @GetMapping("/login")
-    public String headerPrint(){
-        return "header";
     }
 
     @PostMapping("/login")
@@ -183,11 +94,7 @@ public class MemberController {
         }
     }
 
-
-
-    // 전화번호 중복 체크 메소드 구현 필요(회원가입시)
-
-    @PostMapping("/findId")
+    @PostMapping("/search/userid")
     @Transactional
     public String findId(FindIdForm findIdForm, Model model){
 
@@ -206,7 +113,7 @@ public class MemberController {
 
     }
 
-    @PostMapping("/findPwd")
+    @PostMapping("/search/pwd")
     @Transactional
     public String findPwd(FindPwdForm findPwdForm, Model model){
 
@@ -233,18 +140,16 @@ public class MemberController {
     }
 
     @ResponseBody
-    @PutMapping("/newPwdSet")
+    @PutMapping("/{uid}/change/pwd")
     @Transactional
-    public String newPwdSet(@RequestBody String httpbody){
+    public String newPwdSet(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
-        String userid = jsonObject.getString("userid");
         String passwd = jsonObject.getString("passwd");
 
-        userid = XssUtil.cleanXSS(userid);
         passwd = XssUtil.cleanXSS(passwd);
 
-        memberRepository.updatePwd(passwd, userid);
+        memberRepository.updatePwd(passwd, uid);
 
         return "findPwdSucces";
     }
@@ -264,19 +169,20 @@ public class MemberController {
     }
 
     @ResponseBody
-    @GetMapping("/desc")
-    public String memberDesc(){
+    @GetMapping("/{uid}/desc")
+    public String memberDesc(@PathVariable("uid") String uid){
         try {
-            if (session != null){
-                Member member = (Member) session.getAttribute("member");
 
-                // desc 는 null 이 허용되기 때문에 세션에 저장되어 있는 객체에서 가져오는 것이 아닌, 데이터베이스에 검색해서 데이터를 가져온다.
-                Optional<String> memberDesc = memberRepository.findDesc(member.getUserid());
-                String desc = memberDesc.orElseThrow(() -> new NoSuchElementException());
+            Optional<Member> findmember = memberRepository.findByUid(uid);
 
-                return desc;
-            }
-            else throw new IllegalStateException();
+            // uid 를 통해서 회원 정보를 찾지 못한 경우는 세션이 만료되어서 uid 값이 서버에 정상적으로 넘어오지 않았을 때가 유력하다.
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+            // desc 는 null 이 허용되기 때문에 세션에 저장되어 있는 객체에서 가져오는 것이 아닌, 데이터베이스에 검색해서 데이터를 가져온다.
+            Optional<String> memberDesc = memberRepository.findDesc(member.getUserid());
+            String desc = memberDesc.orElseThrow(() -> new NoSuchElementException());
+
+            return desc;
+
         }
         catch (IllegalStateException ie){
             return "getSessionFail";
@@ -287,23 +193,22 @@ public class MemberController {
     }
 
     @ResponseBody
-    @PutMapping("/writedesc")
+    @PutMapping("/{uid}/desc")
     @Transactional
-    public void writeDesc(@RequestBody String httpbody){
+    public void writeDesc(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
 
-        String userid = jsonObject.getString("userid");
         // XSS 공격방지를 위한 처리
         String memberdesc = XssUtil.cleanXSS(jsonObject.getString("memberdesc"));
 
-        memberRepository.update(memberdesc, userid);
+        memberRepository.update(memberdesc, uid);
     }
 
     @ResponseBody
-    @PutMapping("/updateId")
+    @PutMapping("/{uid}/change/userid")
     @Transactional
-    public String updateId(@RequestBody String httpbody){
+    public String updateId(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
         String inputCurUID = jsonObject.getString("curUID");
@@ -312,9 +217,12 @@ public class MemberController {
         inputCurUID = XssUtil.cleanXSS(inputCurUID);
         userid = XssUtil.cleanXSS(userid);
 
-        if (session != null){
-            Member member = (Member) session.getAttribute("member");
-            
+
+        try{
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+
             // 입력받은 현재 아이디와 세션에 있는 아이디 동일성 검증
             if (!member.getUserid().equals(inputCurUID)){
                 // 같지 않을 경우 반환
@@ -325,59 +233,59 @@ public class MemberController {
                 memberRepository.updateId(userid, inputCurUID);
                 return "updateIdSuccess";
             }
-        }
-        else {
+        }catch (IllegalStateException ie){
             return "sessionNotExist";
         }
     }
 
     @ResponseBody
-    @PutMapping("/updateNickname")
+    @PutMapping("/{uid}/change/nickname")
     @Transactional
-    public String updateNickname(@RequestBody String httpbody){
+    public String updateNickname(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
-        String userid = jsonObject.getString("userid");
         String nickname = jsonObject.getString("nickname");
 
-        userid = XssUtil.cleanXSS(userid);
         nickname = XssUtil.cleanXSS(nickname);
 
-        if(session != null){
+        try{
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
 
-            memberRepository.updateNickname(nickname, userid);
-            Member member = (Member) session.getAttribute("member");
+            memberRepository.updateNickname(nickname, member.getUserid());
             member.setNickname(nickname);
+
             session.setAttribute("member", member);
             return "updateNicknameSuccess";
 
-        }
-        else{
+        }catch (IllegalStateException ie){
             return "sessionNotExist";
         }
+
     }
 
     @ResponseBody
-    @PutMapping("/updatePhonenumber")
+    @PutMapping("/{uid}/change/phonenumber")
     @Transactional
-    public String updatePhonenumber(@RequestBody String httpbody){
+    public String updatePhonenumber(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
-        String userid = jsonObject.getString("userid");
         String phonenumber = jsonObject.getString("phonenumber");
 
-        userid = XssUtil.cleanXSS(userid);
         phonenumber = XssUtil.cleanXSS(phonenumber);
 
-        if(session != null){
+        try{
 
-            memberRepository.updatePhonenumber(phonenumber, userid);
-            Member member = (Member) session.getAttribute("member");
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+
+            memberRepository.updatePhonenumber(phonenumber, member.getUserid());
             member.setPhonenumber(phonenumber);
+
             session.setAttribute("member", member);
             return "updatePhonenumberSuccess";
-        }
-        else{
+
+        }catch (IllegalStateException ie){
             return "sessionNotExist";
         }
     }

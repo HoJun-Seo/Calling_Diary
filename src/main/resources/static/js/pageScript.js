@@ -1,27 +1,27 @@
 function moveLogin(){
-    location.href='/move/login';
+    location.href='/loginPage';
 }
 
 function openTerms(){
-    window.open("/move/registerTerm", "약관 동의", "width=800px, height=650px");
+    window.open("/registerTerm", "약관 동의", "width=800px, height=650px");
 }
 
 function updateDataPage(){
-    location.href="/move/updateMemberDataPage";
+    location.href="/updateMemberDataPage";
 }
 
 function moveUidChange(){
-    location.href="/move/uidChangePage";
+    location.href="/uidChangePage";
 }
 
 function movePwdChange(){
-    location.href="/move/pwdChangePage";
+    location.href="/pwdChangePage";
 }
 
 function moveNicknameChange(){
-    location.href="/move/nicknameChangePage";
+    location.href="/nicknameChangePage";
 }
 
 function movePhonenumberChange(){
-    location.href="/move/phonenumberChangePage";
+    location.href="/phonenumberChangePage";
 }

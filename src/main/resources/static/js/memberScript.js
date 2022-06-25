@@ -14,7 +14,7 @@ function chk() {
 
     if(req1 == true && req2 == true) {
         window.close();
-        opener.location.href = "/move/registerForm";
+        opener.location.href = "/registerForm";
     }else {
         alert("필수 약관에 동의하셔야 합니다.");
     }
@@ -41,7 +41,7 @@ function checkId_pattern(){
     const btnIdOverlap = document.getElementById("btnIdOverlap");
     const btnfindPwd = document.getElementById("btnfindPwd");
 
-    fetch("/member/checkId_pattern", {
+    fetch("/patterns/userid", {
          method:"post",
          headers: {
              "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function checkcurId_pattern(){
 
     let userid = document.getElementById("curUID").value;
 
-    fetch("/member/checkId_pattern", {
+    fetch("/patterns/userid", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ function checkId_overlap(){
     // DB 접근을 통해 아이디 중복 여부 확인
     let userid = document.getElementById("userId").value;
 
-    fetch("/member/checkId_overlap", {
+    fetch("/patterns/reduplication/userid", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -145,7 +145,7 @@ function checkPwd_pattern(){
 
     let pwd = document.getElementById("passwd").value;
 
-    fetch("/member/checkPwd_pattern", {
+    fetch("/patterns/pwd", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -196,7 +196,7 @@ function checkPwd_repeat(){
 function checkNickname_pattern(){
     let nickname = document.getElementById("nickname").value;
 
-    fetch("/member/checkNickname_pattern", {
+    fetch("/patterns/nickname", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -231,7 +231,7 @@ function checkPhoneNumber_pattern(target){
     let phoneNumber = document.getElementById("phoneNumber").value;
     const btnCertificate = document.getElementById("btnCertificate");
 
-    fetch("/member/checkPhoneNumber_pattern", {
+    fetch("/patterns/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -258,7 +258,7 @@ function checkPhoneNumber_pattern(target){
 
 async function checkPhoneNumber_overlap(phoneNumber, target){
 
-    await fetch("/member/checkPhoneNumber_overlap", {
+    await fetch("/patterns/reduplication/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -273,6 +273,7 @@ async function checkPhoneNumber_overlap(phoneNumber, target){
         if(checkStatus === "false"){
             if(target === "register"){
                 $("#phonNumber_patternCheck").text("");
+                phoneComplete = true;
                 btnCertificate.disabled = false;
             }
             else if(target === "findAccount"){
@@ -305,7 +306,7 @@ function certificate(){
 
     let phoneNumber = document.getElementById("phoneNumber").value;
 
-    fetch("/member/check_phoneNumber", {
+    fetch("/members/sms/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -361,7 +362,13 @@ function formCheck(){
         const btnPhoneNumberUpdate = document.getElementById("btnPhoneNumberUpdate");
 
         if(btnRegister !== null){
-            btnRegister.disabled = true;
+            if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete){
+                btnRegister.disabled = true;
+            }
+            else{
+                btnRegister.disabled = false;
+            }
+            
         }
         // 아이디 찾기에서 요청이 들어온 경우(아이디, 비밀번호, 닉네임측 요청이 존재하지 않기 때문에 이 셋은 반드시 fasle 이므로 해당 영역에 코드를 작성한다.)
         if(btnfindId !== null){
@@ -423,12 +430,6 @@ function formCheck(){
             }
         }
     }
-    else{
-        const btnRegister = document.getElementById("btnRegister");
-        if(btnRegister != null){
-            btnRegister.disabled = false;
-        }
-    }
 }
 
 /* 로그인 함수 */
@@ -446,11 +447,10 @@ function login(){
         // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
         $("#loginForm").submit();
     }
-}
+}/* 로그아웃 함수 */
 
-/* 로그아웃 함수 */
 function logout(){
-    fetch('/member/logout', {
+    fetch('/members/logout', {
         method:'delete'
     })
     .then((response) => response.text())

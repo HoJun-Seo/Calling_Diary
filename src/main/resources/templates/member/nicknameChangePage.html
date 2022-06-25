@@ -35,9 +35,6 @@
                         <p class="text-primary"> - 특수문자를 제외한 2~20자리 닉네임을 작성해주세요</p>
                         <p id="nicknameCheck"></p>
                       </div>
-                      <div class="form-group">
-                        <input type="hidden" th:value="${session.member.userid}" id="userid">
-                      </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="btnNicknameUpdate" onclick="updateNickname()" disabled>닉네임 변경</button>
                       </div>

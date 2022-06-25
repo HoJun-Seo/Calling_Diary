@@ -42,10 +42,6 @@
                                   <br>
                                   <p class="text-primary"> - 문자 메시지로 전송된 인증번호를 입력해주세요</p>
                                   <p id="phoneNumberCheck"></p>
-
-                                  <div class="form-group">
-                                    <input type="hidden" th:value="${session.member.userid}" id="userid">
-                                  </div>
                               </div>
                               <div class="modal-footer">
                                   <button type="submit" class="btn btn-primary" id="btnPhoneNumberUpdate" onclick="updatePhoneNumber()" disabled>변경하기</button>
