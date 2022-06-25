@@ -20,10 +20,11 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -31,97 +32,9 @@ public class MemberController {
 
     private HttpSession session;
 
-    @ResponseBody
-    @PostMapping("/checkId_pattern")
-    public boolean checkIdPattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String userid = jsonObject.getString("userid");
-
-        boolean checkStatus = memberService.checkIdPattern(userid);
-        return checkStatus;
-    }
 
     @ResponseBody
-    @PostMapping("/checkId_overlap")
-    @Transactional
-    public String checkIdOverlap(@RequestBody String userid){
-
-        userid = XssUtil.cleanXSS(userid);
-        JSONObject jsonObject = new JSONObject(userid);
-        Optional<Member> findMember = memberRepository.findById(jsonObject.getString("userid"));
-        try{
-            // 데이터가 없어 익셉션이 throw 된 경우 중복되는 아이디가 없다는 뜻
-            Member member = findMember.orElseThrow(() -> new NoSuchElementException());
-            return "impossbleId";
-        }
-        catch (NoSuchElementException ne){
-            return "possbleId";
-        }
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPwd_pattern")
-    public boolean checkPwdPattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String pwd = jsonObject.getString("passwd");
-
-        boolean checkStatus = memberService.checkPwdPattern(pwd);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkNickname_pattern")
-    public boolean checkNicknamePattern(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String nickname = jsonObject.getString("nickname");
-
-        boolean checkStatus = memberService.checkNicknamePattern(nickname);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPhoneNumber_pattern")
-    public boolean checkPhoneNumberPattern(@RequestBody String httpBody, RedirectAttributes redirectAttributes){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String phoneNumber = jsonObject.getString("phoneNumber");
-
-        boolean checkStatus = memberService.checkPhoneNumberPattern(phoneNumber);
-        return checkStatus;
-    }
-
-    @ResponseBody
-    @PostMapping("/checkPhoneNumber_overlap")
-    @Transactional
-    public String checkPhoneNumberOverlap(@RequestBody String httpBody){
-
-        JSONObject jsonObject = new JSONObject(httpBody);
-        String phoneNumber = jsonObject.getString("phoneNumber");
-        phoneNumber = XssUtil.cleanXSS(phoneNumber);
-        String overlap = "";
-        Optional<Member> byPNumber = memberRepository.findByPNumber(phoneNumber);
-        
-        try{
-            Member member = byPNumber.orElseThrow(() -> new NoSuchElementException());
-            if (member.getPhonenumber().equals(phoneNumber)){
-                // 전화번호가 중복된다는 뜻의 true
-                overlap = "true";
-            }
-        }
-        catch (NoSuchElementException ne){
-            // 전화번호가 중복되지 않는다는 뜻의 false
-            overlap = "false";
-        }
-
-        return overlap;
-    }
-
-
-    @ResponseBody
-    @PostMapping("/check_phoneNumber")
+    @PostMapping("/sms/phonenumber")
     public String checkPhoneNumber(@RequestBody String httpBody) throws CoolsmsException {
 
         JSONObject jsonObject = new JSONObject(httpBody);
@@ -132,20 +45,18 @@ public class MemberController {
         return numString;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/new")
     @Transactional
     public String memberRegister(Member member){
 
         // XSS 스크립트 입력 방지 실행
+        String uid = UUID.randomUUID().toString(); // REST API 의 URI 상에서 각 회원을 고유하게 식별하기 위한 식별키 생성
+        member.setUid(uid);
+
         member = memberService.cleanXssRegister(member);
         memberRepository.save(member);
 
         return "member/registerComplete";
-    }
-
-    @GetMapping("/login")
-    public String headerPrint(){
-        return "header";
     }
 
     @PostMapping("/login")
@@ -183,11 +94,7 @@ public class MemberController {
         }
     }
 
-
-
-    // 전화번호 중복 체크 메소드 구현 필요(회원가입시)
-
-    @PostMapping("/findId")
+    @PostMapping("/search/userid")
     @Transactional
     public String findId(FindIdForm findIdForm, Model model){
 
@@ -206,7 +113,7 @@ public class MemberController {
 
     }
 
-    @PostMapping("/findPwd")
+    @PostMapping("/search/pwd")
     @Transactional
     public String findPwd(FindPwdForm findPwdForm, Model model){
 
@@ -233,9 +140,9 @@ public class MemberController {
     }
 
     @ResponseBody
-    @PutMapping("/newPwdSet")
+    @PutMapping("/{uid}/change/pwd")
     @Transactional
-    public String newPwdSet(@RequestBody String httpbody){
+    public String newPwdSet(@PathVariable("uid") String uid, @RequestBody String httpbody){
 
         JSONObject jsonObject = new JSONObject(httpbody);
         String userid = jsonObject.getString("userid");

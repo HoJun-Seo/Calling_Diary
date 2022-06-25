@@ -14,7 +14,7 @@ function chk() {
 
     if(req1 == true && req2 == true) {
         window.close();
-        opener.location.href = "/move/registerForm";
+        opener.location.href = "/registerForm";
     }else {
         alert("필수 약관에 동의하셔야 합니다.");
     }
@@ -41,7 +41,7 @@ function checkId_pattern(){
     const btnIdOverlap = document.getElementById("btnIdOverlap");
     const btnfindPwd = document.getElementById("btnfindPwd");
 
-    fetch("/member/checkId_pattern", {
+    fetch("/patterns/userid", {
          method:"post",
          headers: {
              "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function checkcurId_pattern(){
 
     let userid = document.getElementById("curUID").value;
 
-    fetch("/member/checkId_pattern", {
+    fetch("/patterns/userid", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -114,7 +114,7 @@ function checkId_overlap(){
     // DB 접근을 통해 아이디 중복 여부 확인
     let userid = document.getElementById("userId").value;
 
-    fetch("/member/checkId_overlap", {
+    fetch("/patterns/reduplication/userid", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -145,7 +145,7 @@ function checkPwd_pattern(){
 
     let pwd = document.getElementById("passwd").value;
 
-    fetch("/member/checkPwd_pattern", {
+    fetch("/patterns/pwd", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -196,7 +196,7 @@ function checkPwd_repeat(){
 function checkNickname_pattern(){
     let nickname = document.getElementById("nickname").value;
 
-    fetch("/member/checkNickname_pattern", {
+    fetch("/patterns/nickname", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -231,7 +231,7 @@ function checkPhoneNumber_pattern(target){
     let phoneNumber = document.getElementById("phoneNumber").value;
     const btnCertificate = document.getElementById("btnCertificate");
 
-    fetch("/member/checkPhoneNumber_pattern", {
+    fetch("/patterns/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -258,7 +258,7 @@ function checkPhoneNumber_pattern(target){
 
 async function checkPhoneNumber_overlap(phoneNumber, target){
 
-    await fetch("/member/checkPhoneNumber_overlap", {
+    await fetch("/patterns/reduplication/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -305,7 +305,7 @@ function certificate(){
 
     let phoneNumber = document.getElementById("phoneNumber").value;
 
-    fetch("/member/check_phoneNumber", {
+    fetch("/members/sms/phonenumber", {
         method:"post",
         headers: {
             "Content-Type": "application/json",
@@ -450,7 +450,7 @@ function login(){
 
 /* 로그아웃 함수 */
 function logout(){
-    fetch('/member/logout', {
+    fetch('/members/logout', {
         method:'delete'
     })
     .then((response) => response.text())

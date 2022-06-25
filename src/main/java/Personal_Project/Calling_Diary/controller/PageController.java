@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/move")
 public class PageController {
     
     @GetMapping("/login")
     public String moveLogin(){
         return "member/login";
+    }
+
+    @GetMapping("/header")
+    public String headerPrint(){
+        return "header";
     }
 
     @GetMapping("/registerTerm")

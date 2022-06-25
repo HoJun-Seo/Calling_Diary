@@ -29,7 +29,7 @@
                     <h2 class="title text-default">새 비밀번호 설정</h2>
                   </div>
                   <div class="modal-body">
-                    <form action="/member/newPwdSet" method="post">
+                    <form th:action="/members/${member.uid}/change/pwd" method="post">
                       <div class="form-group">
                         <label for="passwd" class="control-label">새 비밀번호</label>
                         <input type="password" class="form-control" id="passwd" name="passwd" placeholder="새 비밀번호 입력" onchange="checkPwd_pattern()"><br>

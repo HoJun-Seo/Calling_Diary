@@ -3,13 +3,13 @@ var member = memberSession;
 $(function(){
 
     if(member !== null){
-        fetch("/member/login")
+        fetch("/header")
             .then((response) => response.text())
             .then((data) => {
                 $(".headerDIV").html(data);
             });
         
-        fetch("/member/desc")
+        fetch("/members/desc")
             .then((response) => response.text())
             .then((data) => {
                 if(data === "notExistDesc"){         
