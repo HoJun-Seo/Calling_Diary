@@ -273,6 +273,7 @@ async function checkPhoneNumber_overlap(phoneNumber, target){
         if(checkStatus === "false"){
             if(target === "register"){
                 $("#phonNumber_patternCheck").text("");
+                phoneComplete = true;
                 btnCertificate.disabled = false;
             }
             else if(target === "findAccount"){
@@ -361,7 +362,13 @@ function formCheck(){
         const btnPhoneNumberUpdate = document.getElementById("btnPhoneNumberUpdate");
 
         if(btnRegister !== null){
-            btnRegister.disabled = true;
+            if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete){
+                btnRegister.disabled = true;
+            }
+            else{
+                btnRegister.disabled = false;
+            }
+            
         }
         // 아이디 찾기에서 요청이 들어온 경우(아이디, 비밀번호, 닉네임측 요청이 존재하지 않기 때문에 이 셋은 반드시 fasle 이므로 해당 영역에 코드를 작성한다.)
         if(btnfindId !== null){
@@ -423,12 +430,6 @@ function formCheck(){
             }
         }
     }
-    else{
-        const btnRegister = document.getElementById("btnRegister");
-        if(btnRegister != null){
-            btnRegister.disabled = false;
-        }
-    }
 }
 
 /* 로그인 함수 */
@@ -446,9 +447,8 @@ function login(){
         // 가입되어 있는 계정인지 아닌지 판별 후 결과에 따라 기능 수행
         $("#loginForm").submit();
     }
-}
+}/* 로그아웃 함수 */
 
-/* 로그아웃 함수 */
 function logout(){
     fetch('/members/logout', {
         method:'delete'

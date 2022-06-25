@@ -16,15 +16,15 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     public Optional<Member> findPwd(@Param("userid")String userid, @Param("phonenumber")String pNumber);
 
     @Modifying
-    @Query("update Member m set m.passwd= :passwd where m.userid= :userid")
-    public void updatePwd(@Param("passwd") String passwd, @Param("userid") String userid);
+    @Query("update Member m set m.passwd= :passwd where m.uid= :uid")
+    public void updatePwd(@Param("passwd") String passwd, @Param("uid") String uid);
 
     @Query("select m.memberdesc from Member m where m.userid= :userid")
     public Optional<String> findDesc(@Param("userid") String userid);
 
     @Modifying
-    @Query("update Member m set m.memberdesc= :memberdesc where m.userid= :userid")
-    void update(@Param("memberdesc")String memberdesc, @Param("userid")String userid);
+    @Query("update Member m set m.memberdesc= :memberdesc where m.uid= :uid")
+    void update(@Param("memberdesc")String memberdesc, @Param("uid")String uid);
 
     @Modifying
     @Query("update Member m set m.userid= :userid where m.userid= :curUID")
@@ -37,4 +37,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Modifying
     @Query("update Member m set m.phonenumber= :phonenumber where m.userid= :userid")
     public void updatePhonenumber(@Param("phonenumber")String phonenumber, @Param("userid") String userid);
+
+    @Query("select m from Member m where m.uid= :uid")
+    public Optional<Member> findByUid(@Param("uid") String uid);
 }

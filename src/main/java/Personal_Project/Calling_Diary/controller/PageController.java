@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class PageController {
     
-    @GetMapping("/login")
+    @GetMapping("/loginPage")
     public String moveLogin(){
         return "member/login";
     }
