@@ -51,7 +51,7 @@ function writeDesc(){
     let desc = $(".writeDescArea").val();
     member.memberdesc = desc;
 
-    fetch('/member/writedesc', {
+    fetch('/members/writedesc', {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function updateId(){
     let curUID = $("#curUID").val();
     let userid = $("#userId").val();
 
-    fetch("/member/updateId", {
+    fetch("/members/updateId", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -104,7 +104,7 @@ function updatePwd(){
     let userid = $("#userid").val();
     let passwd = $("#passwd").val();
 
-    fetch("/member/newPwdSet", {
+    fetch("/members/newPwdSet", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -118,7 +118,7 @@ function updatePwd(){
     .then((data) => {
         if(data === "findPwdSucces"){
             if(member === null){
-                location.href="/move/findPwdSuccesPage";
+                location.href="/findPwdSuccesPage";
             }
             else if(member !== null){
                 alert("비밀번호 변경이 완료 되었습니다. 다시 로그인 해주세요");
@@ -133,7 +133,7 @@ function updateNickname(){
     let userid = $("#userid").val();
     let nickname = $("#nickname").val();
 
-    fetch("/member/updateNickname", {
+    fetch("/members/updateNickname", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -143,16 +143,17 @@ function updateNickname(){
             "nickname":nickname
         })
     })
-    .then((response) => response.text())
+    .then((response) => console.log(response.text()))
     .then((data) => {
-        if(data === "sessionNotExist"){
-            alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
-            moveLogin();
-        }
-        else if(data === "updateNicknameSuccess"){
-            alert("닉네임이 변경되었습니다.")
-            location.href="/move/mypage";
-        }
+        // if(data === "sessionNotExist"){
+        //     alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+        //     moveLogin();
+        // }
+        // else if(data === "updateNicknameSuccess"){
+
+        //     alert("닉네임이 변경되었습니다.")
+        //     location.href="/move/mypage";
+        // }
     })
 }
 
@@ -161,7 +162,7 @@ function updatePhoneNumber(){
     let userid = $("#userid").val();
     let phonenumber = $("#phoneNumber").val();
 
-    fetch("/member/updatePhonenumber", {
+    fetch("/members/updatePhonenumber", {
         method:"put",
         headers: {
             "Content-Type": "application/json",
@@ -179,7 +180,7 @@ function updatePhoneNumber(){
         }
         else if(data === "updatePhonenumberSuccess"){
             alert("전화번호가 변경되었습니다.");
-            location.href="/move/mypage";
+            location.href="/mypage";
         }
     })
 }
