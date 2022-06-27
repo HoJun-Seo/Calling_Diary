@@ -2,12 +2,36 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Calling Diary!</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link href='../css/main.css' rel='stylesheet' />
+    <script src='../js/main.js'></script>
+    <script src="../js/calendar.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                dateClick: function() {
+                    // calendar.gotoDate(new Date(2018,8,1));
+                    let date = calendar.getDate();
+                    alert("오늘은 " + date.getFullY);
+                }
+            });
+            calendar.render();
+        });
+    </script>
 </head>
 <body>
+    <div class="headerDIV">
+    </div>
+    <div id='calendar'></div>
 </body>
 </html>

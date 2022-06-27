@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <script type="text/javascript" src="../js/pageScript.js"></script>
+    <script type="text/javascript" src="../js/memberScript.js"></script>
+    <script type="text/javascript" src="../js/mypageScript.js"></script>
+
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="modal" id="myModal" style="margin-top : 210px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="title text-default" id="myModalLabel">Calling Diary!</h3>
+                            <h2 class="title text-default">회원 탈퇴</h2>
+                            <h5 class="title text-default">비밀번호를 입력하시면 탈퇴 절차가 정상적으로 수행됩니다.</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="passwd" class="control-label"> 현재 비밀번호 입력</label><br>
+                                <input type="password" class="form-control-secession" id="passwd" name="passwd" placeholder="비밀번호 입력"  onchange="checkPwd_pattern()">
+                                <button type="button" class="btn btn-primary" id="confirmPwd" onclick="checkPwd()" disabled>비밀번호 확인</button>
+                                <br>
+                                <p class="text-primary"> - 숫자,특문 각 1회 이상, 영문은 2개 이상을 사용해주세요</p>
+                                <p class="text-primary"> - 8자리 이상 입력해주세요</p>
+                                <p id="pwdCheck"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnsecession" onclick="memberSecession()" disabled>회원 탈퇴</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

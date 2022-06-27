@@ -30,6 +30,7 @@ let idComplete = false;
 let idComplete_new = false;
 let pwdComplete = false;
 let pwdRepeatComplete = false;
+let pwdConfirmComplete = false;
 let nicknameComplete = false;
 let phoneComplete = false;
 let phoneConfirmComplete = false;
@@ -144,6 +145,8 @@ function checkId_overlap(){
 function checkPwd_pattern(){
 
     let pwd = document.getElementById("passwd").value;
+    const pwdRepeat = document.getElementById("checkPasswd");
+    const confirmPwd = document.getElementById("confirmPwd");
 
     fetch("/patterns/pwd", {
         method:"post",
@@ -159,16 +162,29 @@ function checkPwd_pattern(){
         if(checkStatus === "false"){
             $("#pwdCheck").text(" - 비밀번호 형식이 잘못 되었습니다.");
             $("#pwdCheck").css("color","red");
-            const pwdRepeat = document.getElementById("checkPasswd");
-            pwdRepeat.disabled = true;
+            
+            if(pwdRepeat !== null){
+                pwdRepeat.disabled = true;
+            }
+            
             pwdComplete = false;
+
+            if(confirmPwd !== null){
+                confirmPwd.disabled = true;
+            }
             formCheck();
         }
         else{
             $("#pwdCheck").text("");
-            const pwdRepeat = document.getElementById("checkPasswd");
-            pwdRepeat.disabled = false;
+            if(pwdRepeat !== null){
+                pwdRepeat.disabled = false;
+            }
+            
             pwdComplete = true;
+
+            if(confirmPwd !== null){
+                confirmPwd.disabled = false;
+            }
             formCheck();
         }
     })
@@ -352,7 +368,7 @@ function checkNumberConfirm(){
 
 function formCheck(){
 
-    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete){
+    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete || pwdConfirmComplete){
         const btnRegister = document.getElementById("btnRegister");
         const btnfindId = document.getElementById("btnfindId");
         const btnfindPwd = document.getElementById("btnfindPwd");
@@ -360,6 +376,7 @@ function formCheck(){
         const btnIdUpdate = document.getElementById("btnIdUpdate");
         const btnNicknameUpdate = document.getElementById("btnNicknameUpdate");
         const btnPhoneNumberUpdate = document.getElementById("btnPhoneNumberUpdate");
+        const btnsecession = document.getElementById("btnsecession");
 
         if(btnRegister !== null){
             if(!idComplete || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete){
@@ -427,6 +444,12 @@ function formCheck(){
             }
             else{
                 btnPhoneNumberUpdate.disabled = false;
+            }
+        }
+
+        if(btnsecession !== null){
+            if(!pwdConfirmComplete){
+                btnsecession.disabled = true;
             }
         }
     }
