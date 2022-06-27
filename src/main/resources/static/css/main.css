@@ -8,11 +8,6 @@ body{
     text-align: right;
     background-color: #81c147;
 }
-.toggleDIV {
-    float: left;
-    background-color: #81c147;
-    height: 50px;
-}
 .nav-link{
     color: yellow;
 }

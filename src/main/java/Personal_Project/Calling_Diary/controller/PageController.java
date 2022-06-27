@@ -71,4 +71,9 @@ public class PageController {
     public String phonenumberChangePage(){
         return "member/phonenumberChangePage";
     }
+
+    @GetMapping("/calendarPage")
+    public String calendarPage(){
+        return "calendar/calendarPage";
+    }
 }
