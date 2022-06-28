@@ -289,4 +289,47 @@ public class MemberController {
             return "sessionNotExist";
         }
     }
+
+    @ResponseBody
+    @PostMapping("/{uid}/confirmation/passwd")
+    @Transactional
+    public String pwdConfirm(@PathVariable("uid") String uid, @RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        String passwd = jsonObject.getString("passwd");
+
+        passwd = XssUtil.cleanXSS(passwd);
+
+        try{
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+
+            if (member.getPasswd().equals(passwd)){
+                return "pwdCheckSuccess";
+            }
+            else{
+                return "pwdCheckFail";
+            }
+        }
+        catch (IllegalStateException ie){
+            return "sessionNotExist";
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{uid}/secession")
+    @Transactional
+    public String memberSecession (@PathVariable("uid") String uid){
+
+        try{
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+
+            memberRepository.delete(member);
+            return "secessionSuccess";
+
+        }catch (IllegalStateException ie){
+            return "sessionNotExist";
+        }
+    }
 }

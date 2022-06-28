@@ -51,130 +51,222 @@ function writeDesc(){
     let desc = $(".writeDescArea").val();
     member.memberdesc = desc;
 
-    fetch('/members/'+member.uid+'/desc', {
-        method:"put",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "memberdesc":member.memberdesc
+    if(member !== null){
+        fetch('/members/'+member.uid+'/desc', {
+            method:"put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "memberdesc":member.memberdesc
+            })
         })
-    })
-    .then((response) => response.text())
-    .then((data) => {
-        alert("수정이 완료 되었습니다.");
-        location.reload();
-    });
+        .then((response) => response.text())
+        .then((data) => {
+            alert("수정이 완료 되었습니다.");
+            location.reload();
+        });
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
+    
 }
 
 function updateId(){
     let curUID = $("#curUID").val();
     let userid = $("#userId").val();
 
-    fetch("/members/"+member.uid+"/change/userid", {
-        method:"put",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "curUID":curUID,
-            "userid":userid
+    if(member !== null){
+        fetch("/members/"+member.uid+"/change/userid", {
+            method:"put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "curUID":curUID,
+                "userid":userid
+            })
         })
-    })
-    .then((response) => response.text())
-    .then((data) => {
-        if(data === "curIdNotcorrect"){
-            alert("현재 로그인한 아이디와 입력하신 현재 아이디가 일치하지 않습니다.");
-            moveUidChange();
-        }
-        else if(data === "updateIdSuccess"){
-            alert("아이디가 변경 되었습니다. 변경된 아이디로 다시 로그인해주세요");
-            logout();
-        }
-        else if(data === "sessionNotExist"){
-            alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
-            moveLogin();
-        }
-    })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "curIdNotcorrect"){
+                alert("현재 로그인한 아이디와 입력하신 현재 아이디가 일치하지 않습니다.");
+                moveUidChange();
+            }
+            else if(data === "updateIdSuccess"){
+                alert("아이디가 변경 되었습니다. 변경된 아이디로 다시 로그인해주세요");
+                logout();
+            }
+            else if(data === "sessionNotExist"){
+                alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+                moveLogin();
+            }
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
 }
 
 function updatePwd(){
 
     let passwd = $("#passwd").val();
 
-    fetch("/members/"+member.uid+"/change/pwd", {
-        method:"put",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "passwd":passwd
+    if(member !== null){
+        fetch("/members/"+member.uid+"/change/pwd", {
+            method:"put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "passwd":passwd
+            })
         })
-    })
-    .then((response) => response.text())
-    .then((data) => {
-        if(data === "findPwdSucces"){
-            if(member === null){
-                location.href="/findPwdSuccesPage";
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "findPwdSucces"){
+                if(member === null){
+                    location.href="/findPwdSuccesPage";
+                }
+                else if(member !== null){
+                    alert("비밀번호 변경이 완료 되었습니다. 다시 로그인 해주세요");
+                    logout();
+                }
             }
-            else if(member !== null){
-                alert("비밀번호 변경이 완료 되었습니다. 다시 로그인 해주세요");
-                logout();
-            }
-        }
-    })
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
 }
 
 function updateNickname(){
 
     let nickname = $("#nickname").val();
 
-    fetch("/members/"+member.uid+"/change/nickname", {
-        method:"put",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "nickname":nickname
+    if(member !== null){
+        fetch("/members/"+member.uid+"/change/nickname", {
+            method:"put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "nickname":nickname
+            })
         })
-    })
-    .then((response) => response.text())
-    .then((data) => {
-        if(data === "sessionNotExist"){
-            alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
-            moveLogin();
-        }
-        else if(data === "updateNicknameSuccess"){
-
-            alert("닉네임이 변경되었습니다.")
-            location.href="/mypage";
-        }
-    })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "sessionNotExist"){
+                alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+                moveLogin();
+            }
+            else if(data === "updateNicknameSuccess"){
+    
+                alert("닉네임이 변경되었습니다.")
+                location.href="/mypage";
+            }
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
 }
 
 function updatePhoneNumber(){
 
     let phonenumber = $("#phoneNumber").val();
 
-    fetch("/members/"+member.uid+"/change/phonenumber", {
-        method:"put",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            "phonenumber":phonenumber
+    if(member !== null){
+        fetch("/members/"+member.uid+"/change/phonenumber", {
+            method:"put",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "phonenumber":phonenumber
+            })
         })
-    })
-    .then((response) => response.text())
-    .then((data) => {
-        if(data === "sessionNotExist"){
-            alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
-            moveLogin();
-        }
-        else if(data === "updatePhonenumberSuccess"){
-            alert("전화번호가 변경되었습니다.");
-            location.href="/mypage";
-        }
-    })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "sessionNotExist"){
+                alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+                moveLogin();
+            }
+            else if(data === "updatePhonenumberSuccess"){
+                alert("전화번호가 변경되었습니다.");
+                location.href="/mypage";
+            }
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
+}
+
+function checkPwd(){
+
+    let passwd = $("#passwd").val();
+
+    const btnsecession = document.getElementById("btnsecession");
+    if(member !== null){
+        fetch("/members/"+member.uid+"/confirmation/passwd", {
+            method:"post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "passwd":passwd
+            })
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "pwdCheckSuccess"){
+                alert("비밀번호가 정상적으로 확인 되었습니다.");
+                btnsecession.disabled = false;
+            }
+            else if(data === "pwdCheckFail"){
+                alert("비밀번호가 맞지 않습니다.");
+                btnsecession.disabled = true;
+            }
+            else if(data === "sessionNotExist"){
+                alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+                moveLogin();
+            }
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
+}
+
+function memberSecession(){
+    
+    if(member !== null){
+        fetch("/members/"+member.uid+"/secession",{
+            method:'delete',
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "secessionSuccess"){
+                alert("회원 탈퇴가 정상적으로 완료 되었습니다.");
+                logout();
+            }
+            else if(data === "sessionNotExist"){
+                alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+                moveLogin();
+            }
+        })
+    }
+    else{
+        alert("세션이 만료 되었습니다. 로그인 후 이용해주세요");
+        location.href="/"
+    }
 }
 

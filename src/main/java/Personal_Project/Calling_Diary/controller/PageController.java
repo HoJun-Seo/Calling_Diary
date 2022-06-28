@@ -76,4 +76,9 @@ public class PageController {
     public String calendarPage(){
         return "calendar/calendarPage";
     }
+
+    @GetMapping("/secessionPage")
+    public String secessionPage(){
+        return "member/secessionPage";
+    }
 }

@@ -1,6 +1,5 @@
 package Personal_Project.Calling_Diary.model;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.Column;
