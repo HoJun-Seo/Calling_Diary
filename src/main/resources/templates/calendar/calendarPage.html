@@ -15,15 +15,44 @@
     </script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                selectable: true,
                 height: 850,
-                dateClick: function() {
-                    // calendar.gotoDate(new Date(2018,8,1));
+                select: function(info){
+                    alert("일정을 등록 하시겠습니까?");
+                },
+                eventClick:function(info){
+                    alert(info.event.title);
+                    alert(info.event.extendedProps.description);
                 }
             });
+            let events = 
+                {
+                    id:'firstEvent',
+                    title:'firstEvent',
+                    start: new Date('2022-06-29' + 'T00:00:00'),
+                    end:new Date('2022-06-29' + 'T00:00:00'),
+                    description:'description print',
+                    backgroundColor:'rgba(255,0,0,0.46)',
+                    textColor:'blue',
+                    allDay: true
+                }
+                // {
+                //     id:'secondEvent',
+                //     title:'secondEvent',
+                //     start: new Date('2022-06-29' + 'T00:00:00'),
+                //     end:new Date('2022-06-29' + 'T00:00:00'),
+                //     description:'event',
+                //     backgroundColor:'red',
+                //     textColor:'white',
+                //     allDay: true
+                // }
+            
+            calendar.addEvent(events);
             calendar.render();
         });
     </script>

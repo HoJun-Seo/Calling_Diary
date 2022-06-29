@@ -1,0 +1,27 @@
+{
+  "name": "calling_diary",
+  "version": "1.0.0",
+  "description": "this is my toy project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoJun-Seo/Calling_Diary.git"
+  },
+  "author": "HoJun-Seo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoJun-Seo/Calling_Diary/issues"
+  },
+  "homepage": "https://github.com/HoJun-Seo/Calling_Diary#readme",
+  "dependencies": {
+    "@fullcalendar/core": "^5.11.0",
+    "@fullcalendar/daygrid": "^5.11.0",
+    "@fullcalendar/interaction": "^5.11.0",
+    "@fullcalendar/list": "^5.11.0",
+    "@fullcalendar/timegrid": "^5.11.0"
+  },
+  "type": "module"
+}
