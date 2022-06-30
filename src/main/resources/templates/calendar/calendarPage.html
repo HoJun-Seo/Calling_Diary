@@ -6,6 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="javascript" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <link href='../css/main.css' rel='stylesheet' />
     <script src='../js/main.js'></script>
@@ -23,34 +24,32 @@
                 selectable: true,
                 height: 850,
                 select: function(info){
-                    alert("일정을 등록 하시겠습니까?");
+                    if(confirm("일정을 등록하시겠습니까?")){
+                        // 일정 등록을 위한 모달창 오픈
+                        $("#dateModal").modal('show');
+                        $("#startDate").val(info.startStr);
+                        $("#endDate").val(info.endStr);
+                    }
                 },
                 eventClick:function(info){
                     alert(info.event.title);
                     alert(info.event.extendedProps.description);
+                    alert(info.event.start.getFullYear() + ", " + (info.event.start.getMonth()) + ", " + (info.event.start.getDate()));
+                    alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
                 }
             });
             let events = 
                 {
                     id:'firstEvent',
                     title:'firstEvent',
-                    start: new Date('2022-06-29' + 'T00:00:00'),
-                    end:new Date('2022-06-29' + 'T00:00:00'),
+                    start: new Date('2022-06-29'),
+                    end:new Date('2022-06-30'),
                     description:'description print',
                     backgroundColor:'rgba(255,0,0,0.46)',
                     textColor:'blue',
-                    allDay: true
+                    allDay: true,
+                    resourceEditable:true
                 }
-                // {
-                //     id:'secondEvent',
-                //     title:'secondEvent',
-                //     start: new Date('2022-06-29' + 'T00:00:00'),
-                //     end:new Date('2022-06-29' + 'T00:00:00'),
-                //     description:'event',
-                //     backgroundColor:'red',
-                //     textColor:'white',
-                //     allDay: true
-                // }
             
             calendar.addEvent(events);
             calendar.render();
@@ -61,5 +60,35 @@
     <div class="headerDIV">
     </div>
     <div id='calendar'></div>
+    <div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">일정 등록하기</h4>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{/events/} + ${session.member.uid} + @{/creation}" method="post">
+                <label for="eventTitle" class="control-label">일정 제목</label>
+                <input type="text" class="form-control" id="eventTitle" name="title">
+                <input type="text" class="form-control" id="startDate" name="startDate">
+                <input type="text" class="form-control" id="endDate" name="endDate">
+                <input type="text" class="form-control" id="eventDesc" name="eventDesc">
+
+                <div class="input-group date" data-date-format="yyyy.mm.dd">
+                  <input  type="text" class="form-control">
+                  <div class="input-group-addon" >
+                    <span class="glyphicon glyphicon-th"></span>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 </html>
