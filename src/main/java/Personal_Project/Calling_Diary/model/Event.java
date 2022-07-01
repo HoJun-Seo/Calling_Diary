@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventid")
     private Long eventid;
 
@@ -25,12 +25,12 @@ public class Event {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "startDate")
-    private String startDate;
+    @Column(name = "startdate")
+    private String startdate;
 
-    @Column(name = "endDate")
-    private String endDate;
+    @Column(name = "enddate")
+    private String enddate;
 
-    @Column(name = "eventDesc")
-    private String eventDesc;
+    @Column(name = "eventdesc")
+    private String eventdesc;
 }

@@ -368,7 +368,7 @@ function checkNumberConfirm(){
 
 function formCheck(){
 
-    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete || pwdConfirmComplete){
+    if(!idComplete || !idComplete_new || !pwdComplete || !pwdRepeatComplete || !nicknameComplete || !phoneComplete || !phoneConfirmComplete || !pwdConfirmComplete){
         const btnRegister = document.getElementById("btnRegister");
         const btnfindId = document.getElementById("btnfindId");
         const btnfindPwd = document.getElementById("btnfindPwd");

@@ -27,7 +27,9 @@
                         // 일정 등록을 위한 모달창 오픈
                         $("#dateModal").modal('show');
                         $("#startDate").val(info.startStr);
-                        $("#endDate").val(info.endStr);
+
+                        let endDate = new Date(info.end.getFullYear(), info.end.getMonth(), info.end.getDate());
+                        $("#endDate").val(endDate.toISOString().substring(0,10));
                     }
                 },
                 eventClick:function(info){
@@ -72,24 +74,24 @@
                 <ul class="dateList">
                   <li class="dateList-detail">
                     <label for="startDate" class="control-label">시작 일</label>
-                    <input type="text" class="form-control" id="startDate" name="startDate">
+                    <input type="text" class="form-control" id="startDate" name="startDate" readonly>
                   </li>
                   <li class="dateList-detail">
                     <label for="endDate" class="control-label">종료 일</label>
-                    <input type="text" class="form-control" id="endDate" name="endDate"><br>
+                    <input type="text" class="form-control" id="endDate" name="endDate" readonly><br>
                   </li>
                 </ul>
 
                 <label for="eventTitle" class="control-label">제목</label>
-                <input type="text" class="form-control" id="eventTitle" name="title"><br>
+                <input type="text" class="form-control" id="eventTitle" name="title" maxlength="30" placeholder="30자 이내로 입력" onchange="titleSpaceCheck()"><br>
 
                 <label for="eventDesc" class="control-label">상세</label>
-                <textarea name="eventDesc" class="eventDesc" id="eventDesc" placeholder="100자 이내로 입력 가능합니다."></textarea>
+                <textarea name="eventDesc" class="eventDesc" id="eventDesc" placeholder="100자 이내로 입력 가능합니다." onchange="descSpaceCheck()"></textarea>
                 <div class="wordCount">(0 / 100)</div>
 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="submit" class="btn btn-primary" id="btnCreateEvent" disabled>저장</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
                 </div>
               </form>
             </div>
