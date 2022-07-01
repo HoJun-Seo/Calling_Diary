@@ -17,7 +17,15 @@ public class EventController {
 
     @PostMapping("/{uid}/creation")
     public String createEvent(@PathVariable("uid")String uid, EventForm eventForm){
+        System.out.println();
+        System.out.println("==============================");
         System.out.println("요청 접수 확인");
+        System.out.println("이벤트 제목 : " + eventForm.getTitle());
+        System.out.println("이벤트 시작일 : " + eventForm.getStartDate());
+        System.out.println("이벤트 종료일 : " + eventForm.getEndDate());
+        System.out.println("이벤트 설명 : " + eventForm.getEventDesc());
+        System.out.println("==============================");
+        System.out.println();
         return "redirect:/calendarPage";
     }
 }

@@ -180,6 +180,17 @@ body{
     height: 170px;
 }
 
+.dateList{
+  list-style: none;
+}
+.dateList-detail{
+  float: left;
+  margin-right: 60px;
+}
+.eventDesc{
+  width: 100%;
+  height: 70px;
+}
 
 /* fullcalendar api default css */
 

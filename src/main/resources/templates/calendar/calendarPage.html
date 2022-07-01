@@ -6,14 +6,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <link rel="javascript" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <link href='../css/main.css' rel='stylesheet' />
     <script src='../js/main.js'></script>
-    <script src="../js/calendar.js"></script>
     <script type="text/javascript" th:inline="javascript">
         let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
+    <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
     <script>
 
@@ -38,20 +37,20 @@
                     alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
                 }
             });
-            let events = 
-                {
-                    id:'firstEvent',
-                    title:'firstEvent',
-                    start: new Date('2022-06-29'),
-                    end:new Date('2022-06-30'),
-                    description:'description print',
-                    backgroundColor:'rgba(255,0,0,0.46)',
-                    textColor:'blue',
-                    allDay: true,
-                    resourceEditable:true
-                }
+            // let events = 
+            //     {
+            //         id:'firstEvent',
+            //         title:'firstEvent',
+            //         start: new Date('2022-06-29'),
+            //         end:new Date('2022-06-30'),
+            //         description:'description print',
+            //         backgroundColor:'rgba(255,0,0,0.46)',
+            //         textColor:'blue',
+            //         allDay: true,
+            //         resourceEditable:true
+            //     }
             
-            calendar.addEvent(events);
+            // calendar.addEvent(events);
             calendar.render();
         });
     </script>
@@ -65,22 +64,29 @@
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">일정 등록하기</h4>
+              <h4 class="title" id="myModalLabel">일정 등록하기</h4>
             </div>
             <div class="modal-body">
               <form th:action="@{/events/} + ${session.member.uid} + @{/creation}" method="post">
-                <label for="eventTitle" class="control-label">일정 제목</label>
-                <input type="text" class="form-control" id="eventTitle" name="title">
-                <input type="text" class="form-control" id="startDate" name="startDate">
-                <input type="text" class="form-control" id="endDate" name="endDate">
-                <input type="text" class="form-control" id="eventDesc" name="eventDesc">
 
-                <div class="input-group date" data-date-format="yyyy.mm.dd">
-                  <input  type="text" class="form-control">
-                  <div class="input-group-addon" >
-                    <span class="glyphicon glyphicon-th"></span>
-                  </div>
-                </div>
+                <ul class="dateList">
+                  <li class="dateList-detail">
+                    <label for="startDate" class="control-label">시작 일</label>
+                    <input type="text" class="form-control" id="startDate" name="startDate">
+                  </li>
+                  <li class="dateList-detail">
+                    <label for="endDate" class="control-label">종료 일</label>
+                    <input type="text" class="form-control" id="endDate" name="endDate"><br>
+                  </li>
+                </ul>
+
+                <label for="eventTitle" class="control-label">제목</label>
+                <input type="text" class="form-control" id="eventTitle" name="title"><br>
+
+                <label for="eventDesc" class="control-label">상세</label>
+                <textarea name="eventDesc" class="eventDesc" id="eventDesc" placeholder="100자 이내로 입력 가능합니다."></textarea>
+                <div class="wordCount">(0 / 100)</div>
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary">Save changes</button>
