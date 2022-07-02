@@ -21,6 +21,13 @@ create table event(
     eventdesc varchar(100) not null
 );
 
+-- create table memberevent(
+
+
+-- );
+
+select json_object("eventid",eventid, "title",title, "startdate",startdate, "enddate",enddate, "eventdesc",eventdesc) from event where userid='sas6659';
+
 
 
 delete from member where userid="sas6659";

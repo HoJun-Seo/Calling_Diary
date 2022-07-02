@@ -22,7 +22,7 @@ public class MemberEvent implements Serializable {
     private Member member;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberEventid;
 
     @Column(name = "eventArray")

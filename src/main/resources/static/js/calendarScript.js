@@ -66,3 +66,21 @@ function eventFormCheck(){
         btnEventCreate.disabled = false;
     }
 }
+
+function eventCall(){
+    fetch("/events/" + member.uid)
+    .then((response) => response.text())
+    .then((data) => {
+
+        if(data === "sessionNotExist"){
+            alert("로그인 후 이용해주세요");
+            moveLogin();
+        }
+        else if(data === "eventNotExist"){
+
+        }
+        else{
+
+        }
+    })
+}

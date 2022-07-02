@@ -7,12 +7,13 @@ import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.repository.EventRepository;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -23,6 +24,29 @@ public class EventController {
     private final EventRepository eventRepository;
     private final EventService eventService;
     private final MemberRepository memberRepository;
+
+    @ResponseBody
+    @GetMapping("/{uid}")
+    public String callEvent(@PathVariable("uid") String uid){
+
+        Optional<Member> findMember = memberRepository.findByUid(uid);
+        try{
+            Member member = findMember.orElseThrow(() -> new IllegalStateException());
+
+            Optional<List<String>> findeventList = eventRepository.findEventByJSONArray(member.getUserid());
+            List<String> findevent = findeventList.orElseThrow(() -> new NoSuchElementException());
+
+            String eventArrayStr = eventService.makeEventArray(findevent);
+
+            return eventArrayStr;
+        }
+        catch (IllegalStateException ie){
+            return "sessionNotExist";
+        }
+        catch (NoSuchElementException ne){
+            return "eventNotExist";
+        }
+    }
 
     @PostMapping("/{uid}/creation")
     public String createEvent(@PathVariable("uid")String uid, EventForm eventForm){
