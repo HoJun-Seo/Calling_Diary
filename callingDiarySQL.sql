@@ -16,15 +16,13 @@ create table event(
 		on update cascade
         on delete cascade,
 	title varchar(30) not null,
-    startdate varchar(10) not null,
-    enddate varchar(10) not null,
+    start varchar(10) not null,
+    end varchar(10) not null,
     eventdesc varchar(100) not null
 );
 
--- create table memberevent(
-
-
--- );
+alter table event change startdate start varchar(10);
+alter table event change enddate end varchar(10);
 
 select json_object("eventid",eventid, "title",title, "startdate",startdate, "enddate",enddate, "eventdesc",eventdesc) from event where userid='sas6659';
 

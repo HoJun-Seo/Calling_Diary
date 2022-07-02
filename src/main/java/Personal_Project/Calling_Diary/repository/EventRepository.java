@@ -12,6 +12,6 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    @Query(value = "select json_object(\"eventid\",eventid, \"title\",title, \"startdate\",startdate, \"enddate\",enddate, \"eventdesc\",eventdesc) from event where userid= :userid", nativeQuery = true)
+    @Query(value = "select json_object(\"eventid\",eventid, \"title\",title, \"start\",start, \"end\",end, \"eventdesc\",eventdesc) from event where userid= :userid", nativeQuery = true)
     public Optional<List<String>> findEventByJSONArray(@Param("userid") String userid);
 }

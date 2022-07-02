@@ -23,6 +23,7 @@
                 initialView: 'dayGridMonth',
                 selectable: true,
                 height: 850,
+                displayEventTime:false,
                 select: function(info){
                     if(confirm("일정을 등록하시겠습니까?")){
                         // 일정 등록을 위한 모달창 오픈
@@ -35,28 +36,34 @@
                 },
                 eventClick:function(info){
                     alert(info.event.title);
-                    alert(info.event.extendedProps.description);
+                    alert(info.event.extendedProps.eventdesc);
                     alert(info.event.start.getFullYear() + ", " + (info.event.start.getMonth()) + ", " + (info.event.start.getDate()));
                     alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
                 }
             });
-            // let events = 
-            //     {
-            //         id:'firstEvent',
-            //         title:'firstEvent',
-            //         start: new Date('2022-06-29'),
-            //         end:new Date('2022-06-30'),
-            //         description:'description print',
-            //         backgroundColor:'rgba(255,0,0,0.46)',
-            //         textColor:'blue',
-            //         allDay: true,
-            //         resourceEditable:true
-            //     }
-            
-            // calendar.addEvent(events);
 
+            let event = null;
             // 이벤트 호출
-            eventCall();
+            fetch("/events/" + member.uid)
+              .then((response) => response.text())
+              .then((data) => {
+
+                  if(data === "sessionNotExist"){
+                      alert("로그인 후 이용해주세요");
+                      moveLogin();
+                  }
+                  else if(data === "eventNotExist"){
+                  }
+                  else{
+                      event = JSON.parse(data);
+
+                      for(let i = 0; i < event.length; i++){
+                        let enddate = new Date(event[i].end);
+                        event[i].end = enddate;
+                        calendar.addEvent(event[i]);
+                      }
+                  }
+              })
 
             calendar.render();
         });

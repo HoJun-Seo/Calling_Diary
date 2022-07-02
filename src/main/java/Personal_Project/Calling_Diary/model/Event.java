@@ -25,11 +25,11 @@ public class Event {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "startdate")
-    private String startdate;
+    @Column(name = "start")
+    private String start;
 
-    @Column(name = "enddate")
-    private String enddate;
+    @Column(name = "end")
+    private String end;
 
     @Column(name = "eventdesc")
     private String eventdesc;

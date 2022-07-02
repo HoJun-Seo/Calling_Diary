@@ -60,8 +60,8 @@ public class EventController {
             Event event = new Event();
             event.setMember(member);
             event.setTitle(eventForm.getTitle());
-            event.setStartdate(eventForm.getStartDate());
-            event.setEnddate(eventForm.getEndDate());
+            event.setStart(eventForm.getStartDate());
+            event.setEnd(eventForm.getEndDate());
             event.setEventdesc(eventForm.getEventDesc());
 
             eventRepository.save(event);
