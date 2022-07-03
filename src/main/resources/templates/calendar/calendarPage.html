@@ -9,21 +9,62 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <link href='../css/main.css' rel='stylesheet' />
     <script src='../js/main.js'></script>
-    <script src="../js/calendar.js"></script>
     <script type="text/javascript" th:inline="javascript">
         let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
+    <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+    <script type="text/javascript" th:src="@{../js/pageScript.js}"></script>
     <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
+                selectable: true,
                 height: 850,
-                dateClick: function() {
-                    // calendar.gotoDate(new Date(2018,8,1));
+                displayEventTime:false,
+                select: function(info){
+                    if(confirm("일정을 등록하시겠습니까?")){
+                        // 일정 등록을 위한 모달창 오픈
+                        $("#dateModal").modal('show');
+                        $("#startDate").val(info.startStr);
+
+                        let endDate = new Date(info.end.getFullYear(), info.end.getMonth(), info.end.getDate());
+                        $("#endDate").val(endDate.toISOString().substring(0,10));
+                    }
+                },
+                eventClick:function(info){
+                    alert(info.event.title);
+                    alert(info.event.extendedProps.eventdesc);
+                    alert(info.event.start.getFullYear() + ", " + (info.event.start.getMonth()) + ", " + (info.event.start.getDate()));
+                    alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
                 }
             });
+
+            let event = null;
+            // 이벤트 호출
+            fetch("/events/" + member.uid)
+              .then((response) => response.text())
+              .then((data) => {
+
+                  if(data === "sessionNotExist"){
+                      alert("로그인 후 이용해주세요");
+                      moveLogin();
+                  }
+                  else if(data === "eventNotExist"){
+                  }
+                  else{
+                      event = JSON.parse(data);
+
+                      for(let i = 0; i < event.length; i++){
+                        let enddate = new Date(event[i].end);
+                        event[i].end = enddate;
+                        calendar.addEvent(event[i]);
+                      }
+                  }
+              })
+
             calendar.render();
         });
     </script>
@@ -32,5 +73,42 @@
     <div class="headerDIV">
     </div>
     <div id='calendar'></div>
+    <div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="title" id="myModalLabel">일정 등록하기</h4>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{/events/} + ${session.member.uid} + @{/creation}" method="post">
+
+                <ul class="dateList">
+                  <li class="dateList-detail">
+                    <label for="startDate" class="control-label">시작 일</label>
+                    <input type="text" class="form-control" id="startDate" name="startDate" readonly>
+                  </li>
+                  <li class="dateList-detail">
+                    <label for="endDate" class="control-label">종료 일</label>
+                    <input type="text" class="form-control" id="endDate" name="endDate" readonly><br>
+                  </li>
+                </ul>
+
+                <label for="eventTitle" class="control-label">제목</label>
+                <input type="text" class="form-control" id="eventTitle" name="title" maxlength="30" placeholder="30자 이내로 입력" onchange="titleSpaceCheck()"><br>
+
+                <label for="eventDesc" class="control-label">상세</label>
+                <textarea name="eventDesc" class="eventDesc" id="eventDesc" placeholder="100자 이내로 입력 가능합니다." onchange="descSpaceCheck()"></textarea>
+                <div class="wordCount">(0 / 100)</div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="btnCreateEvent" disabled>저장</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 </html>

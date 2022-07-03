@@ -14,6 +14,7 @@
         let memberSession = $.parseJSON('[[${session.member}]]');
     </script>
     <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+    <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
 </head>
 <body>
     <div class="headerDIV">
@@ -53,8 +54,47 @@
                         <a type="button" href="/calendarPage" class="btn btn-lg btn-warning indexButton">일정 등록하러 가기</a>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h3 class="title" style="color:yellow">최근 등록한 일정</h3>
+                    </div>
+                    <div class="col-xs-12">
+                        <script>callEvent()</script>
+                        <div class="eventPrint"></div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div>   
     </div>
+
+    <!-- 이벤트 상세 표시 모달 -->
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="title" id="myModalLabel">일정 상세</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="dateList">
+                  <li class="dateList-detail">
+                    <label for="startDate" class="control-label">시작 일</label>
+                    <input type="text" class="form-control" id="startDate" name="startDate" readonly>
+                  </li>
+                  <li class="dateList-detail">
+                    <label for="endDate" class="control-label">종료 일</label>
+                    <input type="text" class="form-control" id="endDate" name="endDate" readonly><br>
+                  </li>
+                </ul>
+
+                <label for="eventTitle" class="control-label">제목</label>
+                <input type="text" class="form-control" id="eventTitle" name="title" readonly><br>
+
+                <label for="eventDesc" class="control-label">상세</label>
+                <textarea name="eventDesc" class="eventDesc form-control" id="eventDesc" readonly></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
 </body>
 </html>
