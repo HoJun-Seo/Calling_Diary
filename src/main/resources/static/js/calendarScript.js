@@ -66,3 +66,89 @@ function eventFormCheck(){
         btnEventCreate.disabled = false;
     }
 }
+
+function callEvent(){
+
+    fetch("/events/" + member.uid)
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "eventNotExist"){
+                $(".eventPrint").html("<h4 class=\"title\" style=\"color:yellow\">작성한 일정이 없습니다.</h4>");
+            }
+            else{
+                let event = JSON.parse(data);
+
+                $(".eventPrint").append("<ul>");
+                if(event.length > 5){
+                    for(let i = event.length-1; i >= event.length-5; i--){
+                        $(".eventPrint").append("<li class=\"eventList\"><div class=\"panel panel-default eventBody\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + " <br>" + event[i].title + "</div></div></li>");
+                        $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
+                            $("#eventModal").modal('show');
+                            $("#startDate").val(event[i].start);
+                            $("#endDate").val(event[i].end);
+                            $("#eventTitle").val(event[i].title);
+                            $("#eventDesc").val(event[i].eventdesc);
+                        });
+                    }
+                    $(".eventPrint").append("</ul>");
+                }
+                else if(event.length <= 5){
+                    for(let i = event.length-1; i >= 0; i--){
+                        $(".eventPrint").append("<li class=\"eventList\"><div class=\"panel panel-default eventBody\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + " <br>" + event[i].title + "</div></div></li>");
+                        $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
+                            $("#eventModal").modal('show');
+                            $("#startDate").val(event[i].start);
+                            $("#endDate").val(event[i].end);
+                            $("#eventTitle").val(event[i].title);
+                            $("#eventDesc").val(event[i].eventdesc);
+                        });
+                    }
+                    $(".eventPrint").append("</ul>");
+                }
+                       
+            }
+        })
+}
+
+function callEventMypage() {
+
+    fetch("/events/" + member.uid)
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "eventNotExist"){
+                $(".eventPrint").html("<h4 class=\"title\">작성한 일정이 없습니다.</h4>");
+            }
+            else{
+                let event = JSON.parse(data);
+
+                $(".eventPrint").append("<ul>");
+                if(event.length > 5){
+                    for(let i = event.length-1; i >= event.length-5; i--){
+                        $(".eventPrint").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
+                        $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
+                            $("#eventModal").modal('show');
+                            $("#startDate").val(event[i].start);
+                            $("#endDate").val(event[i].end);
+                            $("#eventTitle").val(event[i].title);
+                            $("#eventDesc").val(event[i].eventdesc);
+                        });
+                    }
+                    $(".eventPrint").append("</ul>");
+                }
+                else if(event.length <= 5){
+                    for(let i = event.length-1; i >= 0; i--){
+                        $(".eventPrint").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
+                        $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
+                            $("#eventModal").modal('show');
+                            $("#startDate").val(event[i].start);
+                            $("#endDate").val(event[i].end);
+                            $("#eventTitle").val(event[i].title);
+                            $("#eventDesc").val(event[i].eventdesc);
+                        });
+                    }
+                    $(".eventPrint").append("</ul>");
+                }
+                       
+            }
+        })
+}
