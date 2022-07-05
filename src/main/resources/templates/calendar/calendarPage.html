@@ -35,26 +35,10 @@
                     }
                 },
                 eventClick:function(info){
-                  if(confirm("작성한 일정을 삭제 하시겠습니까?") === true){
-
-                    fetch("/events/"+member.uid+"/"+info.event.extendedProps.eventid, {
-                      method:'delete'
-                    })
-                    .then((response) => response.text())
-                    .then((data) => {
-                      if(data === "deleteSuccess"){
-                        alert("일정이 성공적으로 삭제 되었습니다.");
-                        location.reload();
-                      }
-                      else if(data === "sessionNotExist"){
-                        alert("로그인 후 이용해주세요");
-                        moveLogin();
-                      }
-                      else if(data === "eventNotExist"){
-                        alert("해당 일정은 이미 존재하지 않습니다.");
-                      }
-                    })
-                  }
+                    alert(info.event.title);
+                    alert(info.event.extendedProps.eventdesc);
+                    alert(info.event.start.getFullYear() + ", " + (info.event.start.getMonth()) + ", " + (info.event.start.getDate()));
+                    alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
                 }
             });
 
@@ -76,7 +60,7 @@
                       for(let i = 0; i < event.length; i++){
                         let enddate = new Date(event[i].end);
                         event[i].end = enddate;
-                        calendar.addEvent(event[i]); // 캘린더에 대해 직접적인 접근을 용이하게 하기 위해 html 파일에 fetch 메소드 작성
+                        calendar.addEvent(event[i]);
                       }
                   }
               })
