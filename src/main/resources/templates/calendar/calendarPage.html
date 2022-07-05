@@ -35,10 +35,19 @@
                     }
                 },
                 eventClick:function(info){
-                    alert(info.event.title);
-                    alert(info.event.extendedProps.eventdesc);
-                    alert(info.event.start.getFullYear() + ", " + (info.event.start.getMonth()) + ", " + (info.event.start.getDate()));
-                    alert(info.event.end.getFullYear() + ", " + (info.event.end.getMonth()) + ", " + (info.event.end.getDate()));
+                  if(confirm("작성한 일정을 수정 하시겠습니까?") === true){
+
+                    console.log(info.event);
+                    console.log(info.event.startStr.substring(0,10));
+                    console.log(info.event.endStr.substring(0,10));
+                    console.log(info.event.title);
+                    // 수정, 삭제 페이지 호출
+                    $("#updateModal").modal('show');
+                    $("#updatestartDate").val(info.event.startStr.substring(0,10));
+                    $("#updateendDate").val(info.event.endStr.substring(0,10));
+                    $("#updateeventTitle").val(info.event.title);
+                    $("#updateeventDesc").val(info.event.extendedProps.eventdesc);
+                  }
                 }
             });
 
@@ -103,6 +112,44 @@
 
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary" id="btnCreateEvent" disabled>저장</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="title" id="myModalLabel">일정 등록하기</h4>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{/events/} + ${session.member.uid} + @{/creation}" method="post">
+
+                <ul class="dateList">
+                  <li class="dateList-detail">
+                    <label for="updatestartDate" class="control-label">시작 일</label>
+                    <input type="date" class="form-control" id="updatestartDate" name="startDate" style="margin-right: 60px;">
+                  </li>
+                  <li class="dateList-detail">
+                    <label for="updateendDate" class="control-label">종료 일</label>
+                    <input type="date" class="form-control" id="updateendDate" name="endDate" style="margin-right: 60px;"><br>
+                  </li>
+                </ul>
+                <label for="updateeventTitle" class="control-label">제목</label>
+                <input type="text" class="form-control" id="updateeventTitle" name="title" maxlength="30" placeholder="30자 이내로 입력" onchange="titleSpaceCheck()"><br>
+
+                <label for="updateeventDesc" class="control-label">상세</label>
+                <textarea name="eventDesc" class="eventDesc" id="updateeventDesc" placeholder="100자 이내로 입력 가능합니다." onchange="descSpaceCheck()"></textarea>
+                <div class="wordCount">(0 / 100)</div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" id="btnCreateEvent" disabled>수정</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">삭제</button>
                   <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
                 </div>
               </form>
