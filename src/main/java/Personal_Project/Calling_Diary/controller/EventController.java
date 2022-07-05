@@ -72,4 +72,30 @@ public class EventController {
         }
         return "redirect:/calendarPage";
     }
+
+    @ResponseBody
+    @DeleteMapping("/{uid}/{eventid}")
+    public String eventDelete(@PathVariable("uid") String uid, @PathVariable("eventid") String eventid){
+
+        try{
+
+            Optional<Member> findmember = memberRepository.findByUid(uid);
+            Member member = findmember.orElseThrow(() -> new IllegalStateException());
+
+            Long eventKey = Long.parseLong(eventid);
+            Optional<Event> findEvent = eventRepository.findById(eventKey);
+            Event event = findEvent.orElseThrow(() -> new NoSuchElementException());
+
+            if (event.getMember().getUserid().equals(member.getUserid())){
+                eventRepository.delete(event);
+            }
+        }
+        catch (IllegalStateException ie){
+            return "sessionNotExist";
+        }
+        catch (NoSuchElementException ne){
+            return "eventNotExist";
+        }
+        return "deleteSuccess";
+    }
 }
