@@ -33,4 +33,14 @@ public class Event {
 
     @Column(name = "eventdesc")
     private String eventdesc;
+
+    @Column(name = "favoritestatus")
+    private String favoritestatus;
+
+    @Column(name = "textColor")
+    private String textColor;
+
+    @Column(name = "color")
+    private String color;
+
 }

@@ -76,6 +76,7 @@
                       for(let i = 0; i < event.length; i++){
                         let enddate = new Date(event[i].end);
                         event[i].end = enddate;
+                        console.log(event[i]);
                         calendar.addEvent(event[i]); // 캘린더에 대해 직접적인 접근을 용이하게 하기 위해 html 파일에 fetch 메소드 작성
                       }
                   }
@@ -110,7 +111,8 @@
                   </li>
                 </ul>
 
-                <input type="checkbox" name="즐겨찾기 여부" value="즐겨찾기 등록하기" checked>
+                <br><br><br><br>
+                <label><input type="checkbox" name="favorite" id="favorite"> 즐겨찾기 등록하기</label> <br>
                 <label for="eventTitle" class="control-label">제목</label>
                 <input type="text" class="form-control" id="eventTitle" name="title" maxlength="30" placeholder="30자 이내로 입력" onchange="titleSpaceCheck()"><br>
 

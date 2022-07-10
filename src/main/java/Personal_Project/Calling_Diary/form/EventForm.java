@@ -13,4 +13,6 @@ public class EventForm {
     private String endDate;
 
     private String eventDesc;
+
+    private String favorite;
 }

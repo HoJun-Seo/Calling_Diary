@@ -58,12 +58,26 @@ public class EventController {
             Member member = findMember.orElseThrow(() -> new IllegalStateException());
             eventForm = eventService.cleanXssEventForm(eventForm);
 
+            // 즐겨 찾기가 체크되어 있을경우 리턴 : on
+            // 즐겨 찾기가 체크되어 있지않을 경우 리턴 : null
             Event event = new Event();
             event.setMember(member);
             event.setTitle(eventForm.getTitle());
             event.setStart(eventForm.getStartDate());
             event.setEnd(eventForm.getEndDate());
             event.setEventdesc(eventForm.getEventDesc());
+            event.setFavoritestatus(eventForm.getFavorite());
+
+            if (event.getFavoritestatus() != null) {
+                if (event.getFavoritestatus().equals("on")) {
+                    event.setColor("#008000");
+                    event.setTextColor("#FFFF00");
+                }
+            }
+            else{
+                event.setColor("#0000FF");
+                event.setTextColor("#FFFFFF");
+            }
 
             eventRepository.save(event);
         }
