@@ -20,56 +20,69 @@
     <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
 </head>
 <body>
-    <div class="headerDIV">
-    </div>
+  <div class="headerDIV">
+  </div>
   <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-4"></div>
-        <div role="tabpanel" class="mainIndex bg-warning col-xs-4" style="top: 15% !important; border-radius: 10%;">
-            <!-- Nav tabs -->
-            <h2 class="title">마이페이지</h2>
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#memberData" aria-controls="memberDataTab" role="tab" data-toggle="tab">회원 정보</a>
-                </li>
-                <li role="presentation"><a href="#allCalendarTab" aria-controls="allCalendarTab" role="tab" data-toggle="tab">등록한 전체 일정</a>
-                </li>
-                <li role="presentation"><a href="#favoriteCalendarTab" aria-controls="favoriteCalendarTab" role="tab" data-toggle="tab">즐겨찾기한 일정</a>
-                </li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="memberData">
-                  <!-- 회원 기본정보, 최근 작성한 일정 몇가지 출력 -->
-                  <h2 class="myPageTitle">나의 프로필 <a href="/secessionPage" onclick="" style="font-size: 15px;">회원 탈퇴</a></h2>
-                  <span class="myPageNickname">
-                    &nbsp;&nbsp;닉네임 : <em th:text="${session.member.nickname}" style="font-size: 22px;"></em>
-                  </span>
+      <div class="col-xs-4"></div>
+      <div role="tabpanel" class="mainIndex bg-warning col-xs-4" style="top: 15% !important; border-radius: 10%;">
+        <!-- Nav tabs -->
+        <h2 class="title">마이페이지</h2>
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#memberData" aria-controls="memberDataTab" role="tab" data-toggle="tab">회원 정보</a>
+          </li>
+          <li role="presentation"><a href="#allCalendarTab" aria-controls="allCalendarTab" role="tab" data-toggle="tab">등록한 전체 일정</a>
+          </li>
+          <li role="presentation"><a href="#favoriteCalendarTab" aria-controls="favoriteCalendarTab" role="tab" data-toggle="tab">즐겨찾기한 일정</a>
+          </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="memberData">
+            <!-- 회원 기본정보, 최근 작성한 일정 몇가지 출력 -->
+            <h2 class="myPageTitle">나의 프로필 <a href="/secessionPage" onclick="" style="font-size: 15px;">회원 탈퇴</a></h2>
+            <span class="myPageNickname">
+              &nbsp;&nbsp;닉네임 : <em th:text="${session.member.nickname}" style="font-size: 22px;"></em>
+            </span>
 
-                  <!-- 추후 구현 가능하면 휴대폰 알림 수신 여부 동의버튼도 추가할 것 -->
-                  <br>
-                  <button class="btn btn-sm btn-danger btnMemberUpdate" onclick="updateDataPage()">회원 정보 수정하기</button>
-                  <hr>
-                  <div class="memberDesc">
-                  </div>
-                  <hr>
-                  <!-- 최근 작성한 일정 목록(최대 5개까지 간략하게 노출) -->
-                  <h2 class="myPageTitle">최근 작성한 일정 목록</h2>
-                  <div class="col-xs-12">
-                    <script>callEventMypage()</script>
-                    <div class="eventPrint"></div>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="allCalendarTab">
-                  <!-- 등록한 전체 일정 탭, 등록된 일정을 10개 단위로 페이지네이션 해서 읽어온다. 당연히 검색기능도 제공 -->
-                  <h2 class="myPageTitle">전체 일정 목록</h2>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="favoriteCalendarTab">
-                  <!-- 즐겨찾기한 일정 목록, 즐겨찾기한 일정을 10개 단위로 페이지네이션 해서 읽어온다. 검색기능 역시 제공-->
-                  <h2 class="myPageTitle">즐겨찾기한 일정 목록</h2>
-                </div>
+            <!-- 추후 구현 가능하면 휴대폰 알림 수신 여부 동의버튼도 추가할 것 -->
+            <br>
+            <button class="btn btn-sm btn-danger btnMemberUpdate" onclick="updateDataPage()">회원 정보 수정하기</button>
+            <hr>
+            <div class="memberDesc">
             </div>
+            <hr>
+            <!-- 최근 작성한 일정 목록(최대 5개까지 간략하게 노출) -->
+            <h2 class="myPageTitle">최근 작성한 일정 목록</h2>
+            <div class="col-xs-12">
+              <script>callEventMypage()</script>
+              <div class="eventPrint"></div>
+            </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="allCalendarTab">
+            <!-- 등록한 전체 일정 탭, 등록된 일정을 10개 단위로 페이지네이션 해서 읽어온다. 당연히 검색기능도 제공 -->
+            <h2 class="myPageTitle">전체 일정 목록</h2>
+            <div class="col-xs-12">
+              <script>callEventMypageFull()</script>
+              <div class="eventPrintFullTab">
+                
+              </div>
+              <nav class="eventNav">
+                <ul class="pagination eventPrintFull">
+
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="favoriteCalendarTab">
+            <!-- 즐겨찾기한 일정 목록, 즐겨찾기한 일정을 10개 단위로 페이지네이션 해서 읽어온다. 검색기능 역시 제공-->
+            <h2 class="myPageTitle">즐겨찾기한 일정 목록</h2>
+          </div>
         </div>
         <div class="col-xs-4"></div>
+      </div>
     </div>
   </div>
 

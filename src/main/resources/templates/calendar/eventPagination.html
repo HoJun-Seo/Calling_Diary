@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calling Diary!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link href='../css/main.css' rel='stylesheet' />
+    <!-- 외부 자바스크립트 파일에 세션 데이터 전송 -->
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/mypageScript.js}"></script>
+    <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
+    <script type="text/javascript" th:inline="javascript">
+        
+        $(function(){
+
+            let eventStr = '[[${pageArray}]]';
+            let eventFull = JSON.parse(eventStr);
+            let event = JSON.parse(eventFull);
+
+            for(let i = 0; i < event.length; i++){
+                $(".eventFull").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanelFull" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
+                $("#eventPanelFull"+(event[i].eventid).toString()).click(()=>{
+                    $("#eventModal").modal('show');
+                    $("#startDate").val(event[i].start);
+                    $("#endDate").val(event[i].end);
+                    $("#eventTitle").val(event[i].title);
+                    $("#eventDesc").val(event[i].eventdesc);
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <ul class="eventFull">
+    </ul>
+</body> 
+</html>
