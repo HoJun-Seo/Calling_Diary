@@ -214,3 +214,61 @@ function eventList(index){
             }
         })
 }
+
+function callEventMypageFav(){
+
+    fetch("/events/" + member.uid + "/favorite")
+        .then((response) => response.text())
+        .then((data) => {
+
+            if(data === "eventNotExist"){
+                $(".eventPrintFavTab").html("<h4 class=\"title\">작성한 일정이 없습니다.</h4>");
+            }
+            else{
+
+                let event = JSON.parse(data);
+
+                let pageCount = event.length/5;
+                if(pageCount <= 1)
+                    pageCount = 1;
+                else
+                    pageCount = Math.ceil(pageCount);
+
+                $(".eventPrintFav").append("<li><a href=\"#\" onclick=\"eventList("+(1).toString()+")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span></a></li>");
+                for(let index = 1; index <= pageCount; index++){
+                    // a 태그의 링크를 통해 각 페이지에 맞는 일정들을 출력해줘야 한다.
+                    $(".eventPrintFav").append("<li class=\""+index.toString()+"\"><a href=\"javascript:eventListFav("+index.toString()+");\">" + index.toString() + "</a></li>")
+                }
+
+                eventListFav("1");
+                $(".eventPrintFav").append("<li><a href=\"#\" onclick=\"eventList("+pageCount.toString()+")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a></li>");
+            }
+        })
+}
+
+function eventListFav(index){
+
+    fetch("/events/" + member.uid + "/favorite")
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "eventNotExist"){
+                $(".eventPrintFavTab").html("<h4 class=\"title\">작성한 일정이 없습니다.</h4>");
+            }
+            else{
+                fetch("/events/pagination/favorite",{
+                    method:"post",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "event":data,
+                        "index":Number(index)
+                    })
+                })
+                .then((response) => response.text())
+                .then((data) => {
+                    $(".eventPrintFavTab").html(data);
+                });
+            }
+        })
+}

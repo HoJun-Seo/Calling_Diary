@@ -22,9 +22,10 @@
             let eventFull = JSON.parse(eventStr);
             let event = JSON.parse(eventFull);
 
+            $(".eventFull").empty();
             for(let i = 0; i < event.length; i++){
-                $(".eventFull").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanelFull" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
-                $("#eventPanelFull"+(event[i].eventid).toString()).click(()=>{
+                $(".eventFull").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
+                $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
                     $("#eventModal").modal('show');
                     $("#startDate").val(event[i].start);
                     $("#endDate").val(event[i].end);

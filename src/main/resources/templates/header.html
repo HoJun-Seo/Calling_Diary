@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Calling Diary!</title>
+    <script type="text/javascript" th:inline="javascript">
+        let memberSession = $.parseJSON('[[${session.member}]]');
+    </script>
+    <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
 </head>
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-6 toggleDIV">
-                <a type="button" class="btn btn-success btn-lg" data-toggle="collapse" href="#calendarBar" aria-expanded="false" aria-controls="calendarBar">
-                    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
-                </a>
+            <div class="col-xs-6 indexDIV">
                 &nbsp;<a href="/" class="title indexLink">Calling Diary!</a>
             </div>
             <div class="col-xs-6 dropdownDIV">
@@ -25,20 +26,6 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="collapse" id="calendarBar">
-                <div class="calendarNav">
-                    <ul class="nav nav-pills nav-stacked">
-<!--                        <li role="presentation"><a class="nav-link" href="#"> - 2022년</a></li>-->
-<!--                        <li role="presentation"><a class="nav-link" href="#"> - 2023년</a></li>-->
-<!--                        <li role="presentation"><a class="nav-link" href="#"> - 2024년</a></li>-->
-<!--                        <li role="presentation"><a class="nav-link" href="#"> - 2025년</a></li>-->
-<!--                        <li role="presentation"><a class="nav-link" href="#"> - 2026년</a></li>-->
-                    </ul>
-                </div>
-            </div>
-        </div>
-        </div>   
     </div>
 </body>
 </html>
