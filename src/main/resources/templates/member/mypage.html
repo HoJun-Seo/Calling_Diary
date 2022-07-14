@@ -97,19 +97,26 @@
             <ul class="dateList">
               <li class="dateList-detail">
                 <label for="startDate" class="control-label">시작 일</label>
-                <input type="text" class="form-control" id="startDate" name="startDate">
+                <input type="date" class="form-control" id="startDate" name="startDate">
               </li>
               <li class="dateList-detail">
                 <label for="endDate" class="control-label">종료 일</label>
-                <input type="text" class="form-control" id="endDate" name="endDate"><br>
+                <input type="date" class="form-control" id="endDate" name="endDate"><br>
               </li>
             </ul>
 
+            <br><br><br><br>
             <label for="eventTitle" class="control-label">제목</label>
             <input type="text" class="form-control" id="eventTitle" name="title"><br>
 
             <label for="eventDesc" class="control-label">상세</label>
             <textarea name="eventDesc" class="eventDesc form-control" id="eventDesc"></textarea>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" onclick="eventUpdate()">수정</button>
+              <button type="button" class="btn btn-danger" onclick="eventDelete()">삭제</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            </div>
         </div>
       </div>
     </div>

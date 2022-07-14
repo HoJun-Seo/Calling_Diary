@@ -272,3 +272,44 @@ function eventListFav(index){
             }
         })
 }
+
+function eventUpdate(){
+
+    let title = document.getElementById("eventTitle").value;
+    let desc = document.getElementById("eventDesc").value;
+    let start = document.getElementById("startDate").value;
+    let end = document.getElementById("endDate").value;
+
+    // 각 필드에 대한 입력 여부는 서버 단에서 판단
+    // 버튼 비활성화는 다루기가 까다로워 방향 변경
+    fetch("/events/"+member.uid, {
+        method:"patch",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "title":title,
+            "eventdesc":desc,
+            "start":start,
+            "end":end
+        })
+    })
+    .then((response) => response.text())
+    .then((data) => {
+
+        // 입력이 올바르지 않은 경우
+        if(data === "inputError"){
+
+        }
+        else if(data === "sessionNotExist"){
+
+        }
+        else{
+
+        }
+    })
+}
+
+function eventDelete(){
+
+}
