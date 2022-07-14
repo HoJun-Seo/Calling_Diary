@@ -25,13 +25,13 @@
             $(".eventFav").empty();
             for(let i = 0; i < event.length; i++){
                 $(".eventFav").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
-                $("#eventPanel"+(event[i].eventid).toString()).click(()=>{
+                $(document).on("click", "#eventPanel"+(event[i].eventid).toString(), () => {
                     $("#eventModal").modal('show');
                     $("#startDate").val(event[i].start);
                     $("#endDate").val(event[i].end);
                     $("#eventTitle").val(event[i].title);
                     $("#eventDesc").val(event[i].eventdesc);
-                });
+                })
             }
         });
     </script>
