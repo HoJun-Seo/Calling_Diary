@@ -11,4 +11,8 @@ public interface EventService {
     public EventForm cleanXssEventForm(EventForm eventForm);
 
     public String makeEventArray(List<String> findevent);
+
+    public JSONArray makePageArray(String event, int index);
+
+    public String eventInputCheck(Event event) throws Exception;
 }
