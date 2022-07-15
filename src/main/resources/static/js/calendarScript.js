@@ -279,37 +279,68 @@ function eventUpdate(){
     let desc = document.getElementById("eventDesc").value;
     let start = document.getElementById("startDate").value;
     let end = document.getElementById("endDate").value;
+    let eventid = document.getElementById("eventid").value;
+    const favorite = document.getElementById("favorite");
+    const isChecked = favorite.checked;
 
     // 각 필드에 대한 입력 여부는 서버 단에서 판단
     // 버튼 비활성화는 다루기가 까다로워 방향 변경
     fetch("/events/"+member.uid, {
-        method:"patch",
+        method:"PATCH",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            "eventid":eventid,
             "title":title,
             "eventdesc":desc,
             "start":start,
-            "end":end
+            "end":end,
+            "favoriteCheck":isChecked
         })
     })
     .then((response) => response.text())
     .then((data) => {
 
         // 입력이 올바르지 않은 경우
-        if(data === "inputError"){
-
+        if(data === "textInputError"){
+            alert("제목, 설명은 필수로 입력하세야 합니다!");
+        }
+        else if(data === "dateinputError"){
+            alert("날짜 입력이 잘못 되었습니다!");
+        }
+        else if(data === "updateSuccess"){
+            alert("일정이 정상적으로 수정 완료 되었습니다.");
+            location.reload();
         }
         else if(data === "sessionNotExist"){
-
-        }
-        else{
-
+            alert("로그인 하신 후 이용할 수 있습니다. 로그인 페이지로 이동합니다.");
+            moveLogin();
         }
     })
 }
 
 function eventDelete(){
 
+    if(confirm("정말로 삭제 하시겠습니까?") === true){
+        let eventid = document.getElementById("eventid").value;
+
+        fetch("/events/"+member.uid+"/"+eventid, {
+            method:'delete'
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "deleteSuccess"){
+            alert("일정이 성공적으로 삭제 되었습니다.");
+            location.reload();
+            }
+            else if(data === "sessionNotExist"){
+            alert("로그인 후 이용해주세요");
+            moveLogin();
+            }
+            else if(data === "eventNotExist"){
+            alert("해당 일정은 이미 존재하지 않습니다.");
+            }
+        })
+    }
 }

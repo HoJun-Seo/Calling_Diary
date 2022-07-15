@@ -17,6 +17,8 @@
     <script type="text/javascript" th:src="@{../js/calendarScript.js}"></script>
 </head>
 <body>
+  <div class="headerDIV">
+  </div>
   <div class="container-fluid">
     <div class="row">
       <div class="col-xs-4"></div>
@@ -94,6 +96,9 @@
           <h4 class="title" id="myModalLabel">일정 상세</h4>
         </div>
         <div class="modal-body">
+          <form action="">
+
+          </form>
             <ul class="dateList">
               <li class="dateList-detail">
                 <label for="startDate" class="control-label">시작 일</label>
@@ -106,6 +111,7 @@
             </ul>
 
             <br><br><br><br>
+            <label><input type="checkbox" name="favorite" id="favorite"> 즐겨찾기 등록하기</label> <br>
             <label for="eventTitle" class="control-label">제목</label>
             <input type="text" class="form-control" id="eventTitle" name="title"><br>
 
@@ -113,9 +119,10 @@
             <textarea name="eventDesc" class="eventDesc form-control" id="eventDesc"></textarea>
 
             <div class="modal-footer">
+              <input type="hidden" id="eventid">
               <button type="button" class="btn btn-primary" onclick="eventUpdate()">수정</button>
               <button type="button" class="btn btn-danger" onclick="eventDelete()">삭제</button>
-              <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-default" id="modalClose" data-dismiss="modal">취소</button>
             </div>
         </div>
       </div>

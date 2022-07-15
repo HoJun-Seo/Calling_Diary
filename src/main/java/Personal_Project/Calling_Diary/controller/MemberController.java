@@ -169,6 +169,7 @@ public class MemberController {
 
     @ResponseBody
     @GetMapping("/{uid}/desc")
+    @Transactional
     public String memberDesc(@PathVariable("uid") String uid){
         try {
 

@@ -13,4 +13,6 @@ public interface EventService {
     public String makeEventArray(List<String> findevent);
 
     public JSONArray makePageArray(String event, int index);
+
+    public String eventInputCheck(Event event) throws Exception;
 }

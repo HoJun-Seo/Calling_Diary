@@ -7,8 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -55,5 +57,30 @@ public class EventServiceImpl implements EventService {
             }
         }
         return pageArray;
+    }
+
+    @Override
+    public String eventInputCheck(Event event) throws Exception {
+        
+        // 시작일, 종료일, 시작일-종료일간 비교, 제목, 설명에 대한 입력 오류여부 검증
+
+        if (event.getTitle().equals("") || event.getEventdesc().equals(""))
+            throw new Exception("textInputError");
+
+        if (event.getStart().equals("") || event.getEnd().equals("")){
+            throw new Exception("dateinputError");
+        }
+        // 날짜 입력은 정상적이나 기간이 정상적이지 않을 경우
+        else{
+            String[] startArray = event.getStart().split("-");
+            String[] endArray = event.getEnd().split("-");
+
+            LocalDate start = LocalDate.of(Integer.parseInt(startArray[0]), Integer.parseInt(startArray[1]), Integer.parseInt(startArray[2]));
+            LocalDate end = LocalDate.of(Integer.parseInt(endArray[0]), Integer.parseInt(endArray[1]), Integer.parseInt(endArray[2]));
+
+            if (!end.isAfter(start) && !end.isEqual(start))
+                throw new Exception("dateinputError");
+        }
+        return "inputCheckSuccess";
     }
 }

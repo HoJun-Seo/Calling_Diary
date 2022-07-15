@@ -26,12 +26,20 @@
             for(let i = 0; i < event.length; i++){
                 $(".eventFull").append("<li class=\"eventListMypage\"><div class=\"panel panel-default\"><div class=\"panel-body\" id=\"eventPanel" + (event[i].eventid).toString() + "\">" + event[i].start + " ~ " + event[i].end + "<br>" + event[i].title + "</div></div></li>");
                 $(document).on("click", "#eventPanel"+(event[i].eventid).toString(), ()=>{
-                    console.log("클릭 이벤트 확인");
+                    // 즐겨찾기 되어 있을 경우 즐겨찾기 체크박스 checked 세팅
                     $("#eventModal").modal('show');
                     $("#startDate").val(event[i].start);
                     $("#endDate").val(event[i].end);
                     $("#eventTitle").val(event[i].title);
                     $("#eventDesc").val(event[i].eventdesc);
+                    $("#eventid").val(event[i].eventid);
+
+                    if(event[i].favoritestatus === "on"){
+                        $("#favorite").prop('checked', true);
+                    }
+                    else{
+                        $("#favorite").prop('checked', false);
+                    }
                 })
             }
         });

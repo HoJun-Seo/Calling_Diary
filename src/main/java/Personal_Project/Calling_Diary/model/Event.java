@@ -43,4 +43,10 @@ public class Event {
     @Column(name = "color")
     private String color;
 
+    @Override
+    public String toString() {
+        return "{ eventid : " + this.eventid + ", userid : " + this.member.getUserid() +
+                ", title : " + this.title + ", start : " + this.start + ", end : " + this.end +
+                ", eventdesc : " + this.eventdesc + ", favoritestatus : " + this.favoritestatus + " }";
+    }
 }
