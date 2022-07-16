@@ -344,3 +344,25 @@ function eventDelete(){
         })
     }
 }
+
+function smsReservationPage(){
+
+    fetch("/events/" + member.uid + "/favorite")
+    .then((response) => response.text())
+    .then((data) => {
+
+        const event = JSON.parse(data);
+
+        for(let i = event.length-1; i >= 0 ; i--){
+            $(".smsReservation").append("<li>"+event[i].title + " ("+event[i].start + "~" + event[i].end + ")</li>");
+            $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li>");
+            $(".smsReservation").append("<li><input type=\"button\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
+            $("#eventid").val(event[i].eventid);
+            $("#start").val(event[i].start);
+        }
+    });
+}
+
+function smsModalOpen(){
+    $("#smsModal").modal("show");
+}

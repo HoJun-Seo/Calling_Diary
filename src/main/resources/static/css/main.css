@@ -223,6 +223,12 @@ body{
 .headerTab{
   width: 100%;
 }
+.smsReservation{
+  list-style: none;
+}
+.smsDesc{
+  background-color: white;
+}
 
 /* fullcalendar api default css */
 
