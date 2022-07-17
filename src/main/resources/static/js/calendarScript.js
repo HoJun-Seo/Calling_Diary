@@ -356,8 +356,14 @@ function smsReservationPage(){
         for(let i = event.length-1; i >= 0 ; i--){
             $(".smsReservation").append("<li>"+event[i].title + " ("+event[i].start + "~" + event[i].end + ")</li>");
             $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li>");
-            $(".smsReservation").append("<li><input type=\"button\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
-            $("#eventid").val(event[i].eventid);
+            if(event[i].sms === "yes"){
+                $(".smsReservation").append("<li><input type=\"button\" value=\"알림 취소\" onclick=\"smsCancel()\"></li><hr>");
+            }
+            else{
+                $(".smsReservation").append("<li><input type=\"button\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
+            }
+            
+            $("#smsEventid").val(event[i].eventid);
             $("#start").val(event[i].start);
         }
     });
@@ -365,4 +371,50 @@ function smsReservationPage(){
 
 function smsModalOpen(){
     $("#smsModal").modal("show");
+}
+
+function smsRegister(){
+
+    const eventid = $("#smsEventid").val();
+    const start = $("#start").val();
+    const reservationTime = $("#reservationTime").val();
+    const messageText = $("#messageText").val();
+
+    if(reservationTime.length === 0){
+        alert("알림 시간은 필수로 입력 하셔야 합니다.")
+    }
+    if(messageText.length == 0){
+        alert("메시지 내용은 필수로 입력 하셔야 합니다.")
+    }
+
+    if(reservationTime.length !== 0 && messageText.length !== 0){
+
+        fetch("/events/" + member.uid + "sms", {
+            method:"PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "eventid":eventid,
+                "start":start,
+                "reservationTime":reservationTime,
+                "messageText":messageText
+            })
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "sessionNotExist"){
+                alert("로그인 후 이용하실 수 있습니다. 로그인 창으로 이동합니다.");
+                moveLogin();
+            }
+            else{
+                // alert("알림이 정상적으로 등록 되었습니다.");
+                // location.reload();
+            }
+        })
+    }
+}
+
+function smsCancel(){
+
 }

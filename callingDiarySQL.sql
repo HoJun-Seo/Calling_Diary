@@ -23,6 +23,11 @@ create table event(
 
 alter table event change startdate start varchar(10);
 alter table event change enddate end varchar(10);
+alter table event change textcolor textColor varchar(10);
+alter table event add favoritestatus varchar(10);
+alter table event add textcolor varchar(10);
+alter table event add color varchar(10);
+alter table event add sms varchar(10);
 
 select json_object("eventid",eventid, "title",title, "startdate",startdate, "enddate",enddate, "eventdesc",eventdesc) from event where userid='sas6659';
 
@@ -32,3 +37,5 @@ delete from member where userid="sas6659";
 select * from member;
 select * from event;
 alter table member add uid varchar(100);
+
+select favoritestatus from event where eventid=18;
