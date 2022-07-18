@@ -21,6 +21,15 @@ create table event(
     eventdesc varchar(100) not null
 );
 
+create table smsevent(
+    eventid BIGINT not null,
+    groupid varchar(100) not null,
+    reservationTime varchar(10) not null,
+    messageText varchar(100) not null,
+    start varchar(10) not null,
+    constraint PK_smsevent_eventid_groupid primary key (eventid, groupid)
+);
+
 alter table event change startdate start varchar(10);
 alter table event change enddate end varchar(10);
 alter table event change textcolor textColor varchar(10);

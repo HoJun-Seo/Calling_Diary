@@ -355,12 +355,12 @@ function smsReservationPage(){
 
         for(let i = event.length-1; i >= 0 ; i--){
             $(".smsReservation").append("<li>"+event[i].title + " ("+event[i].start + "~" + event[i].end + ")</li>");
-            $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li>");
+            $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li><br>");
             if(event[i].sms === "yes"){
-                $(".smsReservation").append("<li><input type=\"button\" value=\"알림 취소\" onclick=\"smsCancel()\"></li><hr>");
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"알림 보기\" onclick=\"smsDetail()\"></li><hr>");
             }
             else{
-                $(".smsReservation").append("<li><input type=\"button\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
             }
             
             $("#smsEventid").val(event[i].eventid);
