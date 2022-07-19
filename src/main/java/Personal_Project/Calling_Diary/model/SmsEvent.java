@@ -24,6 +24,9 @@ public class SmsEvent implements Serializable {
     @Column(name = "groupid")
     private String groupid;
 
+    @Column(name = "phonenumber")
+    private String phonenumber;
+
     @Column(name = "start")
     private String start;
 
@@ -33,5 +36,9 @@ public class SmsEvent implements Serializable {
     @Column(name = "messageText")
     private String messageText;
 
-
+    @Override
+    public String toString() {
+        return "{ eventid : " + this.event.getEventid() + ", groupid : " + this.groupid + ", start : " + this.start + ", phonenumber : " + this.phonenumber
+                    + ", reservationTime : " + this.reservationTime + ", messageText : " + this.messageText + " }";
+    }
 }

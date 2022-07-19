@@ -38,6 +38,8 @@ alter table event add textcolor varchar(10);
 alter table event add color varchar(10);
 alter table event add sms varchar(10);
 
+alter table smsevent add phonenumber varchar(30);
+
 select json_object("eventid",eventid, "title",title, "startdate",startdate, "enddate",enddate, "eventdesc",eventdesc) from event where userid='sas6659';
 
 

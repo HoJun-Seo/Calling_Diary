@@ -389,8 +389,8 @@ function smsRegister(){
 
     if(reservationTime.length !== 0 && messageText.length !== 0){
 
-        fetch("/events/" + member.uid + "sms", {
-            method:"PATCH",
+        fetch("/sms/" + member.uid , {
+            method:"post",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -407,9 +407,17 @@ function smsRegister(){
                 alert("로그인 후 이용하실 수 있습니다. 로그인 창으로 이동합니다.");
                 moveLogin();
             }
+            else if(data === "eventNotExist"){
+                alert("존재하지 않는 일정입니다.");
+                location.reload();
+            }
+            else if(data === "reservationError"){
+                alert("문자 발송 예약이 정상적으로 수행되지 않았습니다.");
+                location.reload();
+            }
             else{
-                // alert("알림이 정상적으로 등록 되었습니다.");
-                // location.reload();
+                alert("알림이 정상적으로 등록 되었습니다.");
+                $("#smsModal").modal("hide");
             }
         })
     }

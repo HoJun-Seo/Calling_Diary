@@ -228,20 +228,4 @@ public class EventController {
         }
     }
 
-    @PatchMapping("/{uid}/sms")
-    @ResponseBody
-    @Transactional
-    public String smsRegister(@PathVariable("uid") String uid, @RequestBody String httpbody){
-
-        Optional<Member> findMember = memberRepository.findByUid(uid);
-        try{
-            Member member = findMember.orElseThrow(() -> new IllegalStateException());
-
-            JSONObject jsonObject = new JSONObject(httpbody);
-        }
-        catch (IllegalStateException ie){
-            return "sessionNotExist";
-        }
-        return "registerSuccess";
-    }
 }
