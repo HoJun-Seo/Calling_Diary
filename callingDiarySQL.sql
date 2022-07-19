@@ -45,8 +45,11 @@ select json_object("eventid",eventid, "title",title, "startdate",startdate, "end
 
 
 delete from member where userid="sas6659";
+delete from smsevent where eventid=29;
+
 select * from member;
 select * from event;
+select * from smsevent;
 alter table member add uid varchar(100);
 
 select favoritestatus from event where eventid=18;

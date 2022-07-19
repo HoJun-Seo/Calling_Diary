@@ -1,16 +1,16 @@
 package Personal_Project.Calling_Diary.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class SmsEventId implements Serializable {
 
-    private Event event;
+    private Long event;
     private String groupid;
 }

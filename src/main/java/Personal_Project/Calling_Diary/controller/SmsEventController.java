@@ -48,7 +48,7 @@ public class SmsEventController {
             // 문자 발송은 서비스에서 수행한다.
             SmsEvent smsEvent = new SmsEvent();
             smsEvent.setEvent(event);
-            smsEvent.setStart(jsonObject.getString("start").replace("-", ""));
+            smsEvent.setStart(event.getStart().replace("-", ""));
             smsEvent.setReservationTime(jsonObject.getString("reservationTime").replace(":", "") + "00");
             smsEvent.setPhonenumber(member.getPhonenumber());
             smsEvent.setMessageText(XssUtil.cleanXSS(jsonObject.getString("messageText")));

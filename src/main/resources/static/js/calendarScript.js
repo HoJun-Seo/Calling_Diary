@@ -354,31 +354,31 @@ function smsReservationPage(){
         const event = JSON.parse(data);
 
         for(let i = event.length-1; i >= 0 ; i--){
-            $(".smsReservation").append("<li>"+event[i].title + " ("+event[i].start + "~" + event[i].end + ")</li>");
+            let start = event[i].start;
+            $(".smsReservation").append("<li>"+event[i].title + " ("+start + "~" + event[i].end + ")</li>");
             $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li><br>");
             if(event[i].sms === "yes"){
                 $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"알림 보기\" onclick=\"smsDetail()\"></li><hr>");
             }
             else{
-                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"설정\" onclick=\"smsModalOpen("+ event[i].eventid + ")\"></li><hr>");
             }
-            
-            $("#smsEventid").val(event[i].eventid);
-            $("#start").val(event[i].start);
         }
     });
 }
 
-function smsModalOpen(){
+function smsModalOpen(eventid){
     $("#smsModal").modal("show");
+    $("#smsEventid").val(eventid);
 }
 
 function smsRegister(){
 
     const eventid = $("#smsEventid").val();
-    const start = $("#start").val();
     const reservationTime = $("#reservationTime").val();
     const messageText = $("#messageText").val();
+
+    console.log(eventid);
 
     if(reservationTime.length === 0){
         alert("알림 시간은 필수로 입력 하셔야 합니다.")
@@ -396,7 +396,6 @@ function smsRegister(){
             },
             body: JSON.stringify({
                 "eventid":eventid,
-                "start":start,
                 "reservationTime":reservationTime,
                 "messageText":messageText
             })
