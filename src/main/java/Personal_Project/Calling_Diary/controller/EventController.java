@@ -228,4 +228,26 @@ public class EventController {
         }
     }
 
+    @PatchMapping("/sms")
+    @Transactional
+    @ResponseBody
+    public String updateEventSms(@RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+        Long eventid = Long.parseLong(jsonObject.getString("eventid"));
+        Optional<Event> findevent = eventRepository.findById(eventid);
+
+        try {
+
+            Event event = findevent.orElseThrow(() -> new NoSuchElementException());
+            event.setSms("yes");
+            eventRepository.save(event);
+
+            return "updateSuccess";
+        }
+        catch (NoSuchElementException ne){
+            return "eventNotExist";
+        }
+    }
+
 }

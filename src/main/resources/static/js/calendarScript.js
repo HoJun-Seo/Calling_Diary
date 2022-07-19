@@ -415,8 +415,26 @@ function smsRegister(){
                 location.reload();
             }
             else{
-                alert("알림이 정상적으로 등록 되었습니다.");
-                $("#smsModal").modal("hide");
+                fetch("/events/sms", {
+                    method:"PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "eventid":eventid,
+                    })
+                })
+                .then((response) => response.text())
+                .then((data) => {
+                    if(data === "updateSuccess"){
+                        alert("알림이 정상적으로 등록 되었습니다.");
+                        $("#smsModal").modal("hide");
+                    }
+                    else if(data === "eventNotExist"){
+                        alert("존재하지 않는 일정입니다.");
+                        location.reload();
+                    }
+                })
             }
         })
     }
