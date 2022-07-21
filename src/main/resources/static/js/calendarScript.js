@@ -358,7 +358,7 @@ function smsReservationPage(){
             $(".smsReservation").append("<li>"+event[i].title + " ("+start + "~" + event[i].end + ")</li>");
             $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li><br>");
             if(event[i].sms === "yes"){
-                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"알림 보기\" onclick=\"smsDetail()\"></li><hr>");
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"알림 보기\" onclick=\"smsDetailModalOpen("+ event[i].eventid + ")\"></li><hr>");
             }
             else{
                 $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"설정\" onclick=\"smsModalOpen("+ event[i].eventid + ")\"></li><hr>");
@@ -370,6 +370,17 @@ function smsReservationPage(){
 function smsModalOpen(eventid){
     $("#smsModal").modal("show");
     $("#smsEventid").val(eventid);
+}
+
+function smsDetailModalOpen(eventid){
+
+    fetch("/sms/"+ eventid)
+        .then((response) => response.text())
+        .then((data) => {
+            
+            $("#smsDetailModal").modal("show");
+        })
+    
 }
 
 function smsRegister(){

@@ -31,7 +31,6 @@ public class SmsEventServiceImpl implements SmsEventService {
         JSONObject sendResponse = coolsms.send(params);
         smsEvent.setGroupid((String) sendResponse.get("group_id"));
 
-        System.out.println(smsEvent.toString());
         return smsEvent;
     }
 }
