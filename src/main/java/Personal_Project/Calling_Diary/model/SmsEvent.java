@@ -21,11 +21,11 @@ public class SmsEvent implements Serializable {
     private Event event;
 
     @Id
-    @Column(name = "groupid")
-    private String groupid;
-
     @Column(name = "phonenumber")
     private String phonenumber;
+
+    @Column(name = "groupid")
+    private String groupid;
 
     @Column(name = "start")
     private String start;

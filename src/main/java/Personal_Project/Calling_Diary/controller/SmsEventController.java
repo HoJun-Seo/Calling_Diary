@@ -4,6 +4,7 @@ import Personal_Project.Calling_Diary.interfaceGroup.SmsEventService;
 import Personal_Project.Calling_Diary.model.Event;
 import Personal_Project.Calling_Diary.model.Member;
 import Personal_Project.Calling_Diary.model.SmsEvent;
+import Personal_Project.Calling_Diary.model.SmsEventId;
 import Personal_Project.Calling_Diary.repository.EventRepository;
 import Personal_Project.Calling_Diary.repository.MemberRepository;
 import Personal_Project.Calling_Diary.repository.SmsEventRepository;
@@ -67,5 +68,41 @@ public class SmsEventController {
             return "reservationError";
         }
         return "registerSuccess";
+    }
+
+    @GetMapping("/{uid}/{eventid}")
+    @Transactional
+    @ResponseBody
+    public String selectSmsEvent(@PathVariable("uid") String uid, @PathVariable("eventid") String eventid){
+
+        Optional<Member> findMember = memberRepository.findByUid(uid);
+        try {
+
+            // 세션 여부 확인
+            Member member = findMember.orElseThrow(() -> new IllegalStateException());
+
+            SmsEventId smsEventId = new SmsEventId();
+            smsEventId.setEvent(Long.parseLong(eventid));
+            smsEventId.setPhonenumber(member.getPhonenumber());
+            Optional<SmsEvent> findSmsEvent = smsEventRepository.findById(smsEventId);
+            SmsEvent smsEvent = findSmsEvent.orElseThrow(() -> new NoSuchElementException());
+
+            JSONObject smsObject = new JSONObject();
+
+            smsObject.put("eventid", smsEvent.getEvent());
+            smsObject.put("groupid", smsEvent.getGroupid());
+            smsObject.put("phonenumber", smsEvent.getPhonenumber());
+            smsObject.put("start", smsEvent.getStart());
+            smsObject.put("reservationTime", smsEvent.getReservationTime());
+            smsObject.put("messageText", smsEvent.getMessageText());
+
+            return smsObject.toString();
+        }
+        catch (IllegalStateException ie){
+            return "sessionNotExist";
+        }
+        catch (NoSuchElementException ne){
+            return "smsEventNotExist";
+        }
     }
 }

@@ -374,11 +374,26 @@ function smsModalOpen(eventid){
 
 function smsDetailModalOpen(eventid){
 
-    fetch("/sms/"+ eventid)
+    fetch("/sms/"+ member.uid + "/" + eventid)
         .then((response) => response.text())
         .then((data) => {
-            
-            $("#smsDetailModal").modal("show");
+
+            if(data === "sessionNotExist"){
+                alert("로그인 이후 이용가능한 서비스입니다. 로그인 페이지로 이동합니다.")
+                moveLogin();
+            }
+            else if(data === "smsEventNotExist"){
+                alert("해당 일정이 존재하지 않습니다.");
+                location.reload();
+            }
+            else{
+
+                const smsEvent = JSON.parse(data);
+
+                // 넘어온 데이터 모달창에 표시
+                console.log(smsEvent);
+                // $("#smsDetailModal").modal("show");
+            }
         })
     
 }
@@ -439,7 +454,7 @@ function smsRegister(){
                 .then((data) => {
                     if(data === "updateSuccess"){
                         alert("알림이 정상적으로 등록 되었습니다.");
-                        $("#smsModal").modal("hide");
+                        location.reload();
                     }
                     else if(data === "eventNotExist"){
                         alert("존재하지 않는 일정입니다.");

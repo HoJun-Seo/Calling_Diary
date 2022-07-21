@@ -12,5 +12,5 @@ import java.io.Serializable;
 public class SmsEventId implements Serializable {
 
     private Long event;
-    private String groupid;
+    private String phonenumber;
 }
