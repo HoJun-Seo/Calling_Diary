@@ -389,10 +389,22 @@ function smsDetailModalOpen(eventid){
             else{
 
                 const smsEvent = JSON.parse(data);
+                const time = smsEvent.reservationTime.substr(0,4);
 
+                const hour = time.substr(0,2);
+                const min = time.substr(2,2);
+                let numHour = Number(hour);
+                let day = "오전";
+                if(numHour > 12){
+                    numHour -= 12;
+                    day = "오후";
+                }
                 // 넘어온 데이터 모달창에 표시
-                console.log(smsEvent);
-                // $("#smsDetailModal").modal("show");
+                $("#smsDetailModal").modal("show");
+                $("#reservationTimeDetail").text(day + " " + numHour.toString() + " : " + min);
+                $("#messageTextDetail").text(smsEvent.messageText);
+                $("#smsEventidDetail").text(smsEvent.eventid);
+                $("#phonenumber").text(smsEvent.phonenumber);
             }
         })
     

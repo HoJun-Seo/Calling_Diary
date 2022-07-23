@@ -172,20 +172,20 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="title" id="myModalLabel">예약된 문자 내용</h4>
+          <h3 class="title" id="myModalLabel">예약된 문자 내용</h3>
         </div>
         <div class="modal-body">
-            <label for="reservationTime">알림 시간</label><br>
-            <input type="time" id="reservationTime"><br><br>
+            <h4>알림 시간</h4>
+            <h5 id="reservationTimeDetail"></h5><br>
 
-            <label for="eventTitle" class="control-label">알림 메시지 내용</label>
-            <textarea type="text" class="form-control" id="messageText" name="messageText" maxlength="60" style="width: 100%;"></textarea><br>
-            <p>문자 메시지 내용은 60자 까지 입력 가능합니다.</p>
+            <h4>알림 메시지 내용</h4>
+            <p id="messageTextDetail"></p><br>
 
             <div class="modal-footer">
-              <input type="hidden" id="smsEventid">
-              <input type="button" class="btn btn-primary" id="smsBtn" value="적용" onclick="smsRegister()"></input>
-              <button type="button" class="btn btn-default" id="modalClose" data-dismiss="modal">취소</button>
+              <input type="hidden" id="smsEventidDetail">
+              <input type="hidden" id="phonenumber">
+              <input type="button" class="btn btn-danger" id="smsBtn" value="예약취소" onclick="smsCancel()"></input>
+              <button type="button" class="btn btn-default" id="modalClose" data-dismiss="modal">닫기</button>
             </div>
         </div>
       </div>
