@@ -7,4 +7,6 @@ import org.json.JSONObject;
 public interface SmsEventService {
 
     public SmsEvent smsReservation(SmsEvent smsEvent) throws CoolsmsException;
+
+    public String cancel(SmsEvent smsEvent) throws CoolsmsException;
 }

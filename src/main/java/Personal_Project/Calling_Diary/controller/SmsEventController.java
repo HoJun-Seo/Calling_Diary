@@ -89,7 +89,7 @@ public class SmsEventController {
 
             JSONObject smsObject = new JSONObject();
 
-            smsObject.put("eventid", smsEvent.getEvent());
+            smsObject.put("eventid", smsEvent.getEvent().getEventid());
             smsObject.put("groupid", smsEvent.getGroupid());
             smsObject.put("phonenumber", smsEvent.getPhonenumber());
             smsObject.put("start", smsEvent.getStart());
@@ -103,6 +103,45 @@ public class SmsEventController {
         }
         catch (NoSuchElementException ne){
             return "smsEventNotExist";
+        }
+    }
+
+    @DeleteMapping("/{eventid}")
+    @Transactional
+    @ResponseBody
+    public String deleteSmsEvent(@PathVariable("eventid") String eventid, @RequestBody String httpbody){
+
+        JSONObject jsonObject = new JSONObject(httpbody);
+
+        SmsEventId smsEventId = new SmsEventId();
+        smsEventId.setEvent(Long.parseLong(eventid));
+        smsEventId.setPhonenumber(jsonObject.getString("phonenumber"));
+
+        Optional<SmsEvent> findSmsEvent = smsEventRepository.findById(smsEventId);
+
+        try{
+
+            SmsEvent smsEvent = findSmsEvent.orElseThrow(() -> new NoSuchElementException());
+
+            String deleteResult = smsEventService.cancel(smsEvent);
+
+            if (deleteResult.equals("cancelSuccess")){
+                smsEventRepository.delete(smsEvent);
+
+                Optional<Event> findEvent = eventRepository.findById(Long.parseLong(eventid));
+                Event event = findEvent.orElseThrow(() -> new NoSuchElementException());
+
+                event.setSms(null);
+                eventRepository.save(event);
+            }
+
+            return "cancelSuccess";
+        }
+        catch (NoSuchElementException ne){
+            return "smsEventNotExist";
+        }
+        catch (CoolsmsException e) {
+            return "cancelError";
         }
     }
 }

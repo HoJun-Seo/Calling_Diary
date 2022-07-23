@@ -404,7 +404,9 @@ function smsDetailModalOpen(eventid){
                 $("#reservationTimeDetail").text(day + " " + numHour.toString() + " : " + min);
                 $("#messageTextDetail").text(smsEvent.messageText);
                 $("#smsEventidDetail").text(smsEvent.eventid);
+                $("#startDetail").text(smsEvent.start);
                 $("#phonenumber").text(smsEvent.phonenumber);
+                $("#groupid").text(smsEvent.groupid);
             }
         })
     
@@ -480,4 +482,30 @@ function smsRegister(){
 
 function smsCancel(){
 
+    const cancelEventid = document.getElementById("smsEventidDetail");
+    const phonenumber = document.getElementById("phonenumber");
+
+    fetch("/sms/" + cancelEventid.innerText, {
+        method:"delete",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "phonenumber":phonenumber.innerText,
+        })
+    })
+    .then((response) => response.text())
+    .then((data) => {
+
+        if(data === "smsEventNotExist"){
+            alert("예약된 일정이 존재하지 않습니다.");
+        }
+        else if(data === "cancelError"){
+            alert("예약 취소가 정상적으로 수행되지 않았습니다.");
+        }
+        else{
+            alert("예약이 성공적으로 취소 되었습니다.");
+            location.reload();
+        }
+    })
 }

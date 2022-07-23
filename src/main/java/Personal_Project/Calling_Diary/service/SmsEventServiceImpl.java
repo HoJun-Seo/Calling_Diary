@@ -2,6 +2,7 @@ package Personal_Project.Calling_Diary.service;
 
 import Personal_Project.Calling_Diary.interfaceGroup.SmsEventService;
 import Personal_Project.Calling_Diary.model.SmsEvent;
+import io.swagger.models.auth.In;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 import org.json.simple.JSONObject;
@@ -32,5 +33,18 @@ public class SmsEventServiceImpl implements SmsEventService {
         smsEvent.setGroupid((String) sendResponse.get("group_id"));
 
         return smsEvent;
+    }
+
+    @Override
+    public String cancel(SmsEvent smsEvent) throws CoolsmsException {
+
+        Message coolsms = new Message(apiKey, apiSecretKey);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("gid", smsEvent.getGroupid());
+
+        coolsms.cancel(params);
+
+        return "cancelSuccess";
     }
 }
