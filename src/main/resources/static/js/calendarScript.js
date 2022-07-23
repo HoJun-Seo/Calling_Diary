@@ -354,15 +354,158 @@ function smsReservationPage(){
         const event = JSON.parse(data);
 
         for(let i = event.length-1; i >= 0 ; i--){
-            $(".smsReservation").append("<li>"+event[i].title + " ("+event[i].start + "~" + event[i].end + ")</li>");
-            $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li>");
-            $(".smsReservation").append("<li><input type=\"button\" value=\"설정\" onclick=\"smsModalOpen()\"></li><hr>");
-            $("#eventid").val(event[i].eventid);
-            $("#start").val(event[i].start);
+            let start = event[i].start;
+            $(".smsReservation").append("<li>"+event[i].title + " ("+start + "~" + event[i].end + ")</li>");
+            $(".smsReservation").append("<li class=\"smsDesc\">"+event[i].eventdesc + "</li><br>");
+            if(event[i].sms === "yes"){
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"알림 보기\" onclick=\"smsDetailModalOpen("+ event[i].eventid + ")\"></li><hr>");
+            }
+            else{
+                $(".smsReservation").append("<li><input type=\"button\" class=\"btn btn-primary\" value=\"설정\" onclick=\"smsModalOpen("+ event[i].eventid + ")\"></li><hr>");
+            }
         }
     });
 }
 
-function smsModalOpen(){
+function smsModalOpen(eventid){
     $("#smsModal").modal("show");
+    $("#smsEventid").val(eventid);
+}
+
+function smsDetailModalOpen(eventid){
+
+    fetch("/sms/"+ member.uid + "/" + eventid)
+        .then((response) => response.text())
+        .then((data) => {
+
+            if(data === "sessionNotExist"){
+                alert("로그인 이후 이용가능한 서비스입니다. 로그인 페이지로 이동합니다.")
+                moveLogin();
+            }
+            else if(data === "smsEventNotExist"){
+                alert("해당 일정이 존재하지 않습니다.");
+                location.reload();
+            }
+            else{
+
+                const smsEvent = JSON.parse(data);
+                const time = smsEvent.reservationTime.substr(0,4);
+
+                const hour = time.substr(0,2);
+                const min = time.substr(2,2);
+                let numHour = Number(hour);
+                let day = "오전";
+                if(numHour > 12){
+                    numHour -= 12;
+                    day = "오후";
+                }
+                // 넘어온 데이터 모달창에 표시
+                $("#smsDetailModal").modal("show");
+                $("#reservationTimeDetail").text(day + " " + numHour.toString() + " : " + min);
+                $("#messageTextDetail").text(smsEvent.messageText);
+                $("#smsEventidDetail").text(smsEvent.eventid);
+                $("#startDetail").text(smsEvent.start);
+                $("#phonenumber").text(smsEvent.phonenumber);
+                $("#groupid").text(smsEvent.groupid);
+            }
+        })
+    
+}
+
+function smsRegister(){
+
+    const eventid = $("#smsEventid").val();
+    const reservationTime = $("#reservationTime").val();
+    const messageText = $("#messageText").val();
+
+    console.log(eventid);
+
+    if(reservationTime.length === 0){
+        alert("알림 시간은 필수로 입력 하셔야 합니다.")
+    }
+    if(messageText.length == 0){
+        alert("메시지 내용은 필수로 입력 하셔야 합니다.")
+    }
+
+    if(reservationTime.length !== 0 && messageText.length !== 0){
+
+        fetch("/sms/" + member.uid , {
+            method:"post",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "eventid":eventid,
+                "reservationTime":reservationTime,
+                "messageText":messageText
+            })
+        })
+        .then((response) => response.text())
+        .then((data) => {
+            if(data === "sessionNotExist"){
+                alert("로그인 후 이용하실 수 있습니다. 로그인 창으로 이동합니다.");
+                moveLogin();
+            }
+            else if(data === "eventNotExist"){
+                alert("존재하지 않는 일정입니다.");
+                location.reload();
+            }
+            else if(data === "reservationError"){
+                alert("문자 발송 예약이 정상적으로 수행되지 않았습니다.");
+                location.reload();
+            }
+            else{
+                fetch("/events/sms", {
+                    method:"PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "eventid":eventid,
+                    })
+                })
+                .then((response) => response.text())
+                .then((data) => {
+                    if(data === "updateSuccess"){
+                        alert("알림이 정상적으로 등록 되었습니다.");
+                        location.reload();
+                    }
+                    else if(data === "eventNotExist"){
+                        alert("존재하지 않는 일정입니다.");
+                        location.reload();
+                    }
+                })
+            }
+        })
+    }
+}
+
+function smsCancel(){
+
+    const cancelEventid = document.getElementById("smsEventidDetail");
+    const phonenumber = document.getElementById("phonenumber");
+
+    fetch("/sms/" + cancelEventid.innerText, {
+        method:"delete",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "phonenumber":phonenumber.innerText,
+        })
+    })
+    .then((response) => response.text())
+    .then((data) => {
+
+        if(data === "smsEventNotExist"){
+            alert("예약된 일정이 존재하지 않습니다.");
+        }
+        else if(data === "cancelError"){
+            alert("예약 취소가 정상적으로 수행되지 않았습니다.");
+        }
+        else{
+            alert("예약이 성공적으로 취소 되었습니다.");
+            location.reload();
+        }
+    })
 }
