@@ -37,6 +37,9 @@
 - http://localhost:8080/swagger-ui.html
 - 위 링크는 Repository 를 다운 받으신 후 스프링 부트의 내부 톰캣을 구동시키면 접근이 가능합니다.
 
+## ERD
+![CallingDiary_ERD](https://user-images.githubusercontent.com/48443312/184119753-83863f04-75bd-4bc8-a83a-b01a6b225fe6.PNG)
+
 ## 개발 현황(2022.06.07 ~)
 ### 2022.06.07
 - ver 1.0.0
