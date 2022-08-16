@@ -13,8 +13,9 @@ import java.util.HashMap;
 @Service
 public class SmsEventServiceImpl implements SmsEventService {
 
-    private final String apiKey = "NCSNFWSD3AINHHIM";
-    private final String apiSecretKey = "5NN4H1KIMCH5I3KDRXSHI0R8J2DYAR9H";
+    // CoolSMS 에서 apiKey, apiSecretKey 를 발급 받은 후 직접 값을 할당하여 사용하세요
+    private final String apiKey = "xxxxxxxxxxxx";
+    private final String apiSecretKey = "xxxxxxxxxxxxxxxxxxxxxxxx";
 
     @Override
     public SmsEvent smsReservation(SmsEvent smsEvent) throws CoolsmsException {

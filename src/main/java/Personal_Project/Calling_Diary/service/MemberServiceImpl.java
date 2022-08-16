@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+    // CoolSMS 에서 apiKey, apiSecretKey 를 발급 받은 후 직접 값을 할당하여 사용하세요
+    private final String apiKey = "xxxxxxxxxxxx";
+    private final String apiSecretKey = "xxxxxxxxxxxxxxxxxxxxxxxx";
+
     @Override
     public boolean checkIdPattern(String userid) {
 
@@ -39,10 +43,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public String checkPhoneNumber(String phoneNumber) throws CoolsmsException {
 
-        // 원활한 개발을 위해 프로젝트 완성 때까지 휴대폰 문자인증 기능 주석 처리
-//        String apiKey = "NCSNFWSD3AINHHIM";
-//        String apiSecretKey = "5NN4H1KIMCH5I3KDRXSHI0R8J2DYAR9H";
-//        Message coolsms = new Message(apiKey, apiSecretKey);
+        Message coolsms = new Message(apiKey, apiSecretKey);
         
         Random random = new Random();
         String numString = "";
@@ -51,12 +52,12 @@ public class MemberServiceImpl implements MemberService {
             numString += randomNumber;
         }
 
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put("to", phoneNumber);
-//        params.put("from", "01050623007");
-//        params.put("type", "sms");
-//        params.put("text", "Calling_Diary 휴대폰 인증번호는 [" + numString + "] 입니다.");
-//        coolsms.send(params);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("to", phoneNumber);
+        params.put("from", "01050623007");
+        params.put("type", "sms");
+        params.put("text", "Calling_Diary 휴대폰 인증번호는 [" + numString + "] 입니다.");
+        coolsms.send(params);
 
         return numString;
     }
